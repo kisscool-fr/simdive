@@ -1,0 +1,201 @@
+{
+  "profiles": [
+    {
+      "id": "basic-square-20m",
+      "name": "Profil carré basique - 20m/30min",
+      "description": "Plongée récréative simple pour débutants. Profil carré classique sans décompression obligatoire.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 20,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 20 },
+        { "time": 30, "depth": 20 },
+        { "time": 33, "depth": 5 },
+        { "time": 36, "depth": 5 },
+        { "time": 38, "depth": 0 }
+      ],
+      "events": []
+    },
+    {
+      "id": "multilevel-dive",
+      "name": "Plongée multiniveaux - 30m à 12m",
+      "description": "Plongée multiniveaux typique: descente à 30m, remontée progressive par paliers de profondeur.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 18,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 3, "depth": 30 },
+        { "time": 15, "depth": 30 },
+        { "time": 18, "depth": 20 },
+        { "time": 28, "depth": 20 },
+        { "time": 30, "depth": 12 },
+        { "time": 40, "depth": 12 },
+        { "time": 42, "depth": 5 },
+        { "time": 45, "depth": 5 },
+        { "time": 47, "depth": 0 }
+      ],
+      "events": []
+    },
+    {
+      "id": "essoufflement",
+      "name": "Essoufflement à 25m",
+      "description": "Simulation d'un essoufflement (augmentation du rythme respiratoire) à 25m. Exercice pédagogique sur la gestion de l'air.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 20,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2.5, "depth": 25 },
+        { "time": 20, "depth": 25 },
+        { "time": 23, "depth": 5 },
+        { "time": 26, "depth": 5 },
+        { "time": 28, "depth": 0 }
+      ],
+      "events": [
+        {
+          "time": 10,
+          "type": "breathingRateIncrease",
+          "value": 2.0,
+          "message": "Essoufflement - respiration x2"
+        },
+        { "time": 15, "type": "breathingRateDecrease", "message": "Retour à la normale" }
+      ]
+    },
+    {
+      "id": "air-sharing",
+      "name": "Panne d'air et assistance",
+      "description": "Simulation d'une panne d'air d'un coéquipier nécessitant un partage d'air (respiration à deux sur un bloc).",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 20,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 20 },
+        { "time": 25, "depth": 20 },
+        { "time": 28, "depth": 5 },
+        { "time": 31, "depth": 5 },
+        { "time": 33, "depth": 0 }
+      ],
+      "events": [
+        {
+          "time": 15,
+          "type": "airSharing",
+          "message": "Panne d'air binôme - assistance respiratoire"
+        },
+        { "time": 28, "type": "airSharingEnd", "message": "Fin de l'assistance" }
+      ]
+    },
+    {
+      "id": "deco-dive-40m",
+      "name": "Plongée avec paliers - 40m",
+      "description": "Plongée profonde nécessitant des paliers de décompression. Pour plongeurs confirmés (N3/PA40).",
+      "initialTankPressure": 200,
+      "tankVolume": 15,
+      "sacRate": 18,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 4, "depth": 40 },
+        { "time": 20, "depth": 40 },
+        { "time": 24, "depth": 20 },
+        { "time": 26, "depth": 9 },
+        { "time": 30, "depth": 9 },
+        { "time": 31, "depth": 6 },
+        { "time": 36, "depth": 6 },
+        { "time": 37, "depth": 3 },
+        { "time": 45, "depth": 3 },
+        { "time": 46, "depth": 0 }
+      ],
+      "events": []
+    },
+    {
+      "id": "rapid-ascent",
+      "name": "Remontée rapide - Exercice",
+      "description": "Simulation d'une remontée trop rapide pour illustrer les dangers et l'indicateur de vitesse de remontée.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 20,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 20 },
+        { "time": 15, "depth": 20 },
+        { "time": 16, "depth": 5 },
+        { "time": 19, "depth": 5 },
+        { "time": 20, "depth": 0 }
+      ],
+      "events": [
+        {
+          "time": 15.5,
+          "type": "rapidAscent",
+          "message": "ATTENTION: Vitesse de remontée excessive!"
+        }
+      ]
+    },
+    {
+      "id": "low-air-scenario",
+      "name": "Gestion fin de bloc",
+      "description": "Plongée avec consommation élevée pour exercer la surveillance du manomètre et la gestion de l'air.",
+      "initialTankPressure": 150,
+      "tankVolume": 10,
+      "sacRate": 25,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 18 },
+        { "time": 25, "depth": 18 },
+        { "time": 27, "depth": 5 },
+        { "time": 30, "depth": 5 },
+        { "time": 32, "depth": 0 }
+      ],
+      "events": [
+        { "time": 12, "type": "lowAirWarning", "message": "Reserve - 100 bar" },
+        { "time": 20, "type": "criticalAirWarning", "message": "Air critique - 50 bar" }
+      ]
+    },
+    {
+      "id": "yo-yo-dive",
+      "name": "Plongée yo-yo (à éviter)",
+      "description": "Exemple de profil yo-yo dangereux - variations de profondeur importantes augmentant le risque d'ADD.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 20,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 25 },
+        { "time": 8, "depth": 25 },
+        { "time": 10, "depth": 10 },
+        { "time": 12, "depth": 10 },
+        { "time": 14, "depth": 22 },
+        { "time": 20, "depth": 22 },
+        { "time": 22, "depth": 8 },
+        { "time": 24, "depth": 8 },
+        { "time": 26, "depth": 20 },
+        { "time": 30, "depth": 20 },
+        { "time": 33, "depth": 5 },
+        { "time": 36, "depth": 5 },
+        { "time": 38, "depth": 0 }
+      ],
+      "events": []
+    },
+    {
+      "id": "safety-stop-practice",
+      "name": "Palier de sécurité - Pratique",
+      "description": "Exercice simple focalisé sur l'exécution du palier de sécurité de 3 minutes à 5m.",
+      "initialTankPressure": 200,
+      "tankVolume": 12,
+      "sacRate": 18,
+      "waypoints": [
+        { "time": 0, "depth": 0 },
+        { "time": 2, "depth": 15 },
+        { "time": 20, "depth": 15 },
+        { "time": 22, "depth": 5 },
+        { "time": 25, "depth": 5 },
+        { "time": 26, "depth": 0 }
+      ],
+      "events": [
+        { "time": 22, "type": "safetyStopStart", "message": "Début palier de sécurité 3min" },
+        { "time": 25, "type": "safetyStopEnd", "message": "Palier terminé" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,702 @@
+/* Dive Computer Styles - LCD/Digital Aesthetic */
+
+/* Import Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Color Palette - Deep Ocean Theme */
+  --dc-bg-primary: #0a1628;
+  --dc-bg-secondary: #0f2847;
+  --dc-bg-panel: #122a4d;
+  --dc-bg-lcd: #1a3a5c;
+
+  /* LCD Colors */
+  --dc-lcd-text: #00ff88;
+  --dc-lcd-text-dim: #00994d;
+  --dc-lcd-warning: #ffcc00;
+  --dc-lcd-critical: #ff3344;
+  --dc-lcd-info: #00aaff;
+
+  /* Accent Colors */
+  --dc-accent-cyan: #00d4ff;
+  --dc-accent-blue: #0066cc;
+  --dc-accent-purple: #6644ff;
+
+  /* Gauge Colors */
+  --dc-gauge-full: #00ff88;
+  --dc-gauge-mid: #ffcc00;
+  --dc-gauge-low: #ff6600;
+  --dc-gauge-critical: #ff3344;
+
+  /* Typography */
+  --dc-font-digital: 'Share Tech Mono', 'Courier New', monospace;
+  --dc-font-ui: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  /* Sizes */
+  --dc-border-radius: 8px;
+  --dc-border-radius-lg: 16px;
+  --dc-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --dc-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+/* LCD Digit Styling */
+.lcd-value {
+  font-family: var(--dc-font-digital);
+  font-size: 3rem;
+  color: var(--dc-lcd-text);
+  text-shadow: 0 0 10px var(--dc-lcd-text);
+  letter-spacing: 2px;
+}
+
+.lcd-value.warning {
+  color: var(--dc-lcd-warning);
+  text-shadow: 0 0 10px var(--dc-lcd-warning);
+}
+
+.lcd-value.critical {
+  color: var(--dc-lcd-critical);
+  text-shadow: 0 0 10px var(--dc-lcd-critical);
+  animation: pulse-critical 0.5s ease-in-out infinite;
+}
+
+.lcd-label {
+  font-family: var(--dc-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dc-lcd-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.lcd-unit {
+  font-family: var(--dc-font-digital);
+  font-size: 1rem;
+  color: var(--dc-lcd-text-dim);
+  margin-left: 4px;
+}
+
+/* LCD Panel */
+.lcd-panel {
+  background: linear-gradient(135deg, var(--dc-bg-lcd) 0%, #0d2a47 100%);
+  border: 2px solid var(--dc-accent-cyan);
+  border-radius: var(--dc-border-radius);
+  padding: 16px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    var(--dc-glow);
+}
+
+/* Dive Computer Frame */
+.dive-computer {
+  background: linear-gradient(180deg, var(--dc-bg-secondary) 0%, var(--dc-bg-primary) 100%);
+  border-radius: var(--dc-border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--dc-shadow);
+  border: 3px solid var(--dc-accent-blue);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dive-computer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--dc-accent-cyan);
+}
+
+.dive-computer-title {
+  font-family: var(--dc-font-ui);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dc-accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Main Display Grid */
+.display-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.display-cell {
+  background: var(--dc-bg-panel);
+  border-radius: var(--dc-border-radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.display-cell.primary {
+  grid-column: span 2;
+  background: linear-gradient(135deg, var(--dc-bg-lcd) 0%, #0d2a47 100%);
+  border: 2px solid var(--dc-accent-cyan);
+  box-shadow: var(--dc-glow);
+}
+
+.display-cell.depth {
+  border-left: 4px solid var(--dc-accent-cyan);
+}
+
+.display-cell.time {
+  border-left: 4px solid var(--dc-lcd-info);
+}
+
+.display-cell.ndl {
+  border-left: 4px solid var(--dc-lcd-text);
+}
+
+.display-cell.air {
+  border-left: 4px solid var(--dc-gauge-full);
+}
+
+/* Progress Bars */
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
+}
+
+.progress-bar-fill.gauge-full {
+  background: linear-gradient(90deg, var(--dc-gauge-full), #00cc6f);
+}
+
+.progress-bar-fill.gauge-mid {
+  background: linear-gradient(90deg, var(--dc-gauge-mid), #ff9900);
+}
+
+.progress-bar-fill.gauge-low {
+  background: linear-gradient(90deg, var(--dc-gauge-low), #ff4400);
+}
+
+.progress-bar-fill.gauge-critical {
+  background: linear-gradient(90deg, var(--dc-gauge-critical), #cc0022);
+  animation: pulse-critical 0.5s ease-in-out infinite;
+}
+
+/* Warnings Panel */
+.warnings-panel {
+  background: rgba(255, 51, 68, 0.1);
+  border: 1px solid var(--dc-lcd-critical);
+  border-radius: var(--dc-border-radius);
+  padding: 12px;
+  margin-top: 16px;
+}
+
+.warning-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 51, 68, 0.2);
+}
+
+.warning-item:last-child {
+  border-bottom: none;
+}
+
+.warning-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.warning-icon.critical {
+  background: var(--dc-lcd-critical);
+  color: white;
+}
+
+.warning-icon.warning {
+  background: var(--dc-lcd-warning);
+  color: black;
+}
+
+.warning-icon.info {
+  background: var(--dc-lcd-info);
+  color: white;
+}
+
+.warning-text {
+  font-family: var(--dc-font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dc-lcd-critical);
+}
+
+/* Ascent Rate Indicator */
+.ascent-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ascent-bar {
+  width: 20px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ascent-bar-fill {
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  background: var(--dc-lcd-text);
+  border-radius: 10px;
+  transition:
+    height 0.3s ease,
+    background 0.3s ease;
+}
+
+.ascent-bar-fill.descending {
+  bottom: auto;
+  top: 50%;
+}
+
+.ascent-bar-fill.violation {
+  background: var(--dc-lcd-critical);
+  animation: pulse-critical 0.5s ease-in-out infinite;
+}
+
+/* Safety Stop */
+.safety-stop {
+  background: linear-gradient(135deg, #1a4a1a 0%, #0d2d0d 100%);
+  border: 2px solid var(--dc-lcd-text);
+  border-radius: var(--dc-border-radius);
+  padding: 16px;
+  text-align: center;
+}
+
+.safety-stop.active {
+  animation: safety-glow 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes pulse-critical {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes safety-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--dc-lcd-text);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--dc-lcd-text);
+  }
+}
+
+/* Playback Controls */
+.playback-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  background: var(--dc-bg-panel);
+  border-radius: var(--dc-border-radius);
+  margin-top: 20px;
+}
+
+.control-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: var(--dc-accent-blue);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.25rem;
+}
+
+.control-btn:hover {
+  background: var(--dc-accent-cyan);
+  transform: scale(1.1);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn.primary {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--dc-accent-cyan) 0%, var(--dc-accent-blue) 100%);
+  font-size: 1.5rem;
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Speed Selector */
+.speed-selector {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 20px;
+}
+
+.speed-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--dc-lcd-text-dim);
+  cursor: pointer;
+  font-family: var(--dc-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.speed-btn:hover {
+  color: var(--dc-lcd-text);
+}
+
+.speed-btn.active {
+  background: var(--dc-accent-blue);
+  color: white;
+}
+
+/* Timeline */
+.timeline {
+  width: 100%;
+  padding: 16px 0;
+}
+
+.timeline-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.timeline-progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dc-accent-cyan), var(--dc-accent-blue));
+  border-radius: 4px;
+  transition: width 0.1s linear;
+}
+
+.timeline-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: var(--dc-accent-cyan);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: grab;
+  transition: transform 0.1s ease;
+}
+
+.timeline-thumb:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Profile Selector */
+.profile-selector {
+  margin-bottom: 20px;
+}
+
+.profile-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--dc-bg-panel);
+  border: 2px solid var(--dc-accent-blue);
+  border-radius: var(--dc-border-radius);
+  color: var(--dc-lcd-text);
+  font-family: var(--dc-font-ui);
+  font-size: 1rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300d4ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 48px;
+}
+
+.profile-select:focus {
+  outline: none;
+  border-color: var(--dc-accent-cyan);
+  box-shadow: var(--dc-glow);
+}
+
+.profile-select option {
+  background: var(--dc-bg-primary);
+  color: white;
+}
+
+.profile-description {
+  margin-top: 8px;
+  font-family: var(--dc-font-ui);
+  font-size: 0.875rem;
+  color: var(--dc-lcd-text-dim);
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--dc-border-radius);
+}
+
+/* Tissue Saturation Graph */
+.tissue-graph {
+  background: var(--dc-bg-panel);
+  border-radius: var(--dc-border-radius);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.tissue-graph-title {
+  font-family: var(--dc-font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dc-accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.tissue-bars {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 120px;
+}
+
+.tissue-bar {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tissue-bar-fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition:
+    height 0.3s ease,
+    background 0.3s ease;
+  min-height: 2px;
+}
+
+.tissue-bar-fill.safe {
+  background: linear-gradient(180deg, var(--dc-lcd-text) 0%, #00994d 100%);
+}
+
+.tissue-bar-fill.warning {
+  background: linear-gradient(180deg, var(--dc-lcd-warning) 0%, #cc9900 100%);
+}
+
+.tissue-bar-fill.danger {
+  background: linear-gradient(180deg, var(--dc-lcd-critical) 0%, #cc0022 100%);
+}
+
+.tissue-labels {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.tissue-label {
+  flex: 1;
+  text-align: center;
+  font-family: var(--dc-font-digital);
+  font-size: 0.625rem;
+  color: var(--dc-lcd-text-dim);
+}
+
+/* M-Value Line */
+.tissue-graph-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.m-value-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--dc-lcd-critical);
+  opacity: 0.5;
+}
+
+/* Mode Toggle */
+.mode-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 20px;
+}
+
+.mode-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--dc-lcd-text-dim);
+  cursor: pointer;
+  font-family: var(--dc-font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+  color: var(--dc-lcd-text);
+}
+
+.mode-btn.active {
+  background: var(--dc-accent-blue);
+  color: white;
+}
+
+/* Time Display */
+.time-display {
+  font-family: var(--dc-font-digital);
+  font-size: 0.875rem;
+  color: var(--dc-lcd-info);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .dive-computer {
+    padding: 16px;
+    border-radius: var(--dc-border-radius);
+  }
+
+  .display-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .display-cell.primary {
+    grid-column: span 1;
+  }
+
+  .lcd-value {
+    font-size: 2rem;
+  }
+
+  .playback-controls {
+    flex-wrap: wrap;
+  }
+
+  .tissue-bars {
+    height: 80px;
+  }
+}
+
+/* Air Gauge Specific */
+.air-gauge {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.air-gauge-bar {
+  height: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.air-gauge-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
+}
+
+.air-gauge-markers {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.air-gauge-marker {
+  font-family: var(--dc-font-digital);
+  font-size: 0.625rem;
+  color: var(--dc-lcd-text-dim);
+}
+
+/* Deco Stops Display */
+.deco-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.deco-stop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 204, 0, 0.1);
+  border-left: 3px solid var(--dc-lcd-warning);
+  border-radius: 0 var(--dc-border-radius) var(--dc-border-radius) 0;
+}
+
+.deco-stop-depth {
+  font-family: var(--dc-font-digital);
+  font-size: 1rem;
+  color: var(--dc-lcd-warning);
+}
+
+.deco-stop-time {
+  font-family: var(--dc-font-digital);
+  font-size: 1rem;
+  color: var(--dc-lcd-text);
+}

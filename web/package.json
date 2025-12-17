@@ -1,0 +1,52 @@
+{
+  "name": "simdive",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Simulateur d'ordinateur de plongée pédagogique pour l'enseignement de la décompression",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "vue": "^3.5.24",
+    "vue-chartjs": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.4.2",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^7.2.4",
+    "vue-tsc": "^3.1.4"
+  },
+  "keywords": [
+    "diving",
+    "scuba",
+    "decompression",
+    "education",
+    "simulation",
+    "vue"
+  ],
+  "author": "Sebastien <sebastien@abzu-diving.fr>",
+  "license": "MIT",
+  "homepage": "https://github.com/kisscool-fr/simdive",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kisscool-fr/simdive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kisscool-fr/simdive/issues"
+  }
+}

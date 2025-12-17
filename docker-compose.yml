@@ -1,0 +1,12 @@
+services:
+  simdive:
+    image: node:24.11-alpine3.22
+    container_name: simdive
+    ports:
+      - '5173:5173'
+    working_dir: /var/www/simdive/web
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - .:/var/www/simdive
+    environment:
+      - NODE_ENV=development
