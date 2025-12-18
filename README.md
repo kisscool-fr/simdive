@@ -120,7 +120,7 @@ Elle ne doit en aucun cas être utilisée pour planifier des plongées réelles.
 
 ## 📝 Licence
 
-Projet open source à but éducatif.
+MIT (Projet open source à but éducatif).
 
 ## 🙏 Crédits
 

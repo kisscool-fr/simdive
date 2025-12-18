@@ -1,38 +1,36 @@
 # Justfile for simdive Docker management
+DOCKER_COMPOSE := "docker compose"
+APP_NAME := "simdive"
 
 # Default recipe: show available commands
 default:
     @just --list
 
-# Build the Docker container
-build:
-    docker compose build
-
 # Start the Docker container in detached mode
 run:
-    docker compose up -d
+    {{DOCKER_COMPOSE}} up -d {{APP_NAME}}
 
 # Start the Docker container with logs attached
 run-attached:
-    docker compose up
+    {{DOCKER_COMPOSE}} up {{APP_NAME}}
 
 # Stop the Docker container
 stop:
-    docker compose down
+    {{DOCKER_COMPOSE}} down {{APP_NAME}}
 
 # Restart the Docker container
 restart:
-    docker compose restart
+    {{DOCKER_COMPOSE}} restart {{APP_NAME}}
 
 # Show container logs
 logs:
-    docker compose logs -f simdive
+    {{DOCKER_COMPOSE}} logs -f {{APP_NAME}}
 
 # Open a shell in the running container
 shell:
-    docker exec -it simdive sh
+    docker exec -it {{APP_NAME}} sh
 
 # Check container status
 status:
-    docker compose ps
+    {{DOCKER_COMPOSE}} ps {{APP_NAME}}
 
