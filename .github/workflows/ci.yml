@@ -34,7 +34,7 @@ jobs:
         working-directory: web
         run: npm ci
 
-  lint:
+  check:
     name: Lint & Format Check
     needs: setup
     runs-on: ubuntu-latest
@@ -60,4 +60,8 @@ jobs:
       - name: Run format check
         working-directory: web
         run: npm run format:check
+
+      - name: Run tests
+        working-directory: web
+        run: npm run test:run
 
