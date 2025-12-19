@@ -109,6 +109,7 @@ export function useAirConsumption(
    */
   function getAirState(depth: number): AirState {
     return {
+      initialTankPressure,
       tankPressure: Math.round(tankPressure.value),
       remainingAirTime: calculateRemainingAirTime(depth),
       currentSacRate: currentSacRate.value,

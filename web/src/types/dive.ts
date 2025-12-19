@@ -64,6 +64,7 @@ export interface DecoStop {
 
 // Air Consumption State
 export interface AirState {
+  initialTankPressure: number; // Initial tank pressure in bar
   tankPressure: number; // Current tank pressure in bar
   remainingAirTime: number; // Remaining air time at current depth/rate in minutes
   currentSacRate: number; // Current SAC rate (may be modified by events)
