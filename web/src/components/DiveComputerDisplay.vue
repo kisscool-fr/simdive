@@ -49,7 +49,7 @@ const ndlClass = computed(() => {
 // Air pressure percentage
 const airPercent = computed(() => {
   if (!props.diveState) return 100;
-  return (props.diveState.air.tankPressure / 200) * 100;
+  return (props.diveState.air.tankPressure / props.diveState.air.initialTankPressure) * 100;
 });
 
 // Ascent rate bar height (max 100%)
@@ -99,7 +99,10 @@ const isDescending = computed(() => {
         <!-- Air Pressure -->
         <div class="display-cell air">
           <span class="lcd-label">Pression</span>
-          <span class="lcd-value" :class="getAirGaugeClass(diveState.air.tankPressure)">
+          <span
+            class="lcd-value"
+            :class="getAirGaugeClass(diveState.air.tankPressure, diveState.air.initialTankPressure)"
+          >
             {{ diveState.air.tankPressure }}
           </span>
           <span class="lcd-unit">bar</span>
@@ -107,7 +110,9 @@ const isDescending = computed(() => {
             <div class="air-gauge-bar">
               <div
                 class="air-gauge-fill"
-                :class="getAirGaugeClass(diveState.air.tankPressure)"
+                :class="
+                  getAirGaugeClass(diveState.air.tankPressure, diveState.air.initialTankPressure)
+                "
                 :style="{ width: `${airPercent}%` }"
               ></div>
             </div>
