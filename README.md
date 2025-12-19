@@ -1,18 +1,26 @@
 # SimDive - Simulateur d'Ordinateur de Plongée
 
-Application web pédagogique Vue.js pour l'enseignement de la décompression, inspirée par [e-Plouf](https://e-plouf.com/).
+Application web pédagogique en Vue.js pour l'enseignement de la décompression, librement inspirée par [e-Plouf](https://e-plouf.com/).
+
+## 👀 Démo
+
+Testez l'application sur https://simdive.pages.dev
 
 ## 🎯 Objectif
 
 SimDive permet aux moniteurs de plongée de simuler des plongées virtuelles avec leurs élèves, en observant les indications d'un ordinateur de plongée : profondeur, temps, NDL (No-Deco Limit), pression d'air, saturation des tissus, etc.
+
+### 🤔 Pourquoi ne pas utiliser e-Plouf ?
+
+[e-Plouf](https://e-plouf.com/) nécesite une licence Excel pour pouvoir débloquer toutes les fonctionnalités, et repose sur des macros nécessitant d'abaisser la sécurité de son ordinateur durant l'utilisation. Si, comme moi, vous ne pouvez pas vous permettre ces pré-requis, alors SimDive est fait pour vous 🤗.
 
 ## ✨ Fonctionnalités
 
 - **Affichage réaliste** d'un ordinateur de plongée avec style LCD
 - **Deux modes d'affichage** :
   - **Essentiel** : Profondeur, temps, NDL, pression d'air
-  - **Expert** : Saturation des tissus, TTS, paliers, vitesse de remontée
-- **Contrôles de lecture** : Play/Pause, avance/recul pas à pas, vitesse variable (0.5x à 10x)
+  - **Expert** : Ajoute saturation des tissus, TTS, paliers, vitesse de remontée
+- **Contrôles de lecture** : Play/Pause (bouton ou touche "Espace"), avance/recul pas à pas, vitesse variable (0.5x à 10x)
 - **Profils de plongée configurables** via fichier JSON
 - **Calcul de décompression** basé sur l'algorithme Bühlmann ZHL-16C
 - **Gestion de l'air** avec SAC rate et événements (essoufflement, partage d'air)
@@ -24,7 +32,10 @@ SimDive permet aux moniteurs de plongée de simuler des plongées virtuelles ave
 
 ```bash
 # Construire et démarrer le conteneur
-docker-compose up --build
+docker-compose up -d
+
+# ou avec just
+just run
 
 # L'application est accessible sur http://localhost:5173
 ```
@@ -38,7 +49,7 @@ npm install
 # Lancer le serveur de développement
 npm run dev
 
-# Build pour production
+# Build pour déploiement en production
 npm run build
 ```
 
@@ -124,4 +135,4 @@ MIT (Projet open source à but éducatif).
 
 ## 🙏 Crédits
 
-Inspiré par [e-Plouf](https://e-plouf.com/), application créée par le Club Olympique de Sèvres section Plongée.
+Librement iInspiré par [e-Plouf](https://e-plouf.com/), application créée par le Club Olympique de Sèvres section Plongée.
