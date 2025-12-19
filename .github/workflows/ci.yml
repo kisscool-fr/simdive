@@ -35,7 +35,7 @@ jobs:
         run: npm ci
 
   check:
-    name: Lint & Format Check
+    name: Lint, Format & Test Check
     needs: setup
     runs-on: ubuntu-latest
     steps:
