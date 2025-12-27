@@ -1,3 +1,7 @@
+set windows-shell := ["cmd.exe", "/c"]
+
+set quiet
+
 # Justfile for simdive Docker management
 DOCKER_COMPOSE := "docker compose"
 APP_NAME := "simdive"
