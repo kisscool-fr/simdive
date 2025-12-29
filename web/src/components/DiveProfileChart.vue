@@ -41,19 +41,19 @@ const chartData = computed(() => {
 
   const waypoints = props.profile.waypoints;
   const events = props.profile.events;
-  
+
   // Generate points every 0.5 minutes for smooth curve
   const points: { time: number; depth: number }[] = [];
   const lastWaypoint = waypoints[waypoints.length - 1];
   const totalTime = lastWaypoint ? lastWaypoint.time : 0;
-  
+
   for (let t = 0; t <= totalTime; t += 0.5) {
     points.push({
       time: t,
       depth: interpolateDepth(t, waypoints),
     });
   }
-  
+
   // Ensure last point is included
   if (points.length > 0 && points[points.length - 1].time < totalTime) {
     points.push({
@@ -63,26 +63,28 @@ const chartData = computed(() => {
   }
 
   // Create event time ranges for coloring
-  const eventTimes = new Set(events.map(e => e.time));
-  
+  // const eventTimes = new Set(events.map((e) => e.time));
+
   // Determine segment colors based on events
-  const segmentColors = points.map((point, index) => {
+  const segmentColors = points.map((point, _index) => {
     // Check if there's an active event around this time
-    const hasEvent = events.some(event => {
+    const hasEvent = events.some((event) => {
       const eventStart = event.time;
       // Events that have an "end" counterpart
       if (event.type === 'breathingRateIncrease') {
-        const endEvent = events.find(e => e.type === 'breathingRateDecrease' && e.time > eventStart);
+        const endEvent = events.find(
+          (e) => e.type === 'breathingRateDecrease' && e.time > eventStart
+        );
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
       if (event.type === 'airSharing') {
-        const endEvent = events.find(e => e.type === 'airSharingEnd' && e.time > eventStart);
+        const endEvent = events.find((e) => e.type === 'airSharingEnd' && e.time > eventStart);
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
       if (event.type === 'safetyStopStart') {
-        const endEvent = events.find(e => e.type === 'safetyStopEnd' && e.time > eventStart);
+        const endEvent = events.find((e) => e.type === 'safetyStopEnd' && e.time > eventStart);
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
@@ -96,14 +98,15 @@ const chartData = computed(() => {
   });
 
   return {
-    labels: points.map(p => p.time.toFixed(1)),
+    labels: points.map((p) => p.time.toFixed(1)),
     datasets: [
       {
         label: 'Profondeur (m)',
-        data: points.map(p => p.depth),
+        data: points.map((p) => p.depth),
         borderColor: segmentColors,
         segment: {
-          borderColor: (ctx: { p0DataIndex: number }) => segmentColors[ctx.p0DataIndex] || '#00d4ff',
+          borderColor: (ctx: { p0DataIndex: number }) =>
+            segmentColors[ctx.p0DataIndex] || '#00d4ff',
         },
         backgroundColor: 'rgba(0, 212, 255, 0.1)',
         fill: true,
@@ -118,7 +121,7 @@ const chartData = computed(() => {
 // Current position point
 const currentPointData = computed(() => {
   if (!props.profile) return null;
-  
+
   const depth = interpolateDepth(props.currentTime, props.profile.waypoints);
   return {
     time: props.currentTime,
@@ -172,7 +175,7 @@ const chartOptions = computed(() => ({
           family: "'Share Tech Mono', monospace",
           size: 10,
         },
-        callback: function(value: string | number, index: number) {
+        callback: function (value: string | number, index: number) {
           // Show fewer labels
           if (index % 4 === 0) {
             const labels = chartData.value.labels;
@@ -238,36 +241,35 @@ const chartOptions = computed(() => ({
 const chartRef = ref<{ chart: ChartJS } | null>(null);
 
 // Draw current position indicator
-watch([currentPointData, chartRef], () => {
-  // The indicator is handled via annotation plugin or overlay div
-}, { immediate: true });
+watch(
+  [currentPointData, chartRef],
+  () => {
+    // The indicator is handled via annotation plugin or overlay div
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <div class="dive-profile-chart">
     <h3 class="chart-title">Profil de plongée</h3>
     <div class="chart-container">
-      <Line
-        v-if="profile"
-        ref="chartRef"
-        :data="chartData"
-        :options="chartOptions"
-      />
+      <Line v-if="profile" ref="chartRef" :data="chartData" :options="chartOptions" />
       <div v-else class="no-profile">
         <span>Sélectionnez un profil pour visualiser la plongée</span>
       </div>
-      
+
       <!-- Current position indicator overlay -->
-      <div 
+      <div
         v-if="profile && currentPointData"
         class="current-position-dot"
         :style="{
           left: `calc(${(currentTime / (profile.waypoints[profile.waypoints.length - 1]?.time || 1)) * 100}% + 55px)`,
-          top: `calc(${(currentPointData.depth / Math.max(...profile.waypoints.map(w => w.depth), 1)) * 100}% + 15px)`,
+          top: `calc(${(currentPointData.depth / Math.max(...profile.waypoints.map((w) => w.depth), 1)) * 100}% + 15px)`,
         }"
       ></div>
     </div>
-    
+
     <!-- Legend for events -->
     <div v-if="profile && profile.events.length > 0" class="chart-legend">
       <div class="legend-item">
@@ -326,10 +328,14 @@ watch([currentPointData, chartRef], () => {
   border: 2px solid white;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+  box-shadow:
+    0 0 10px #00ff88,
+    0 0 20px rgba(0, 255, 136, 0.5);
   z-index: 10;
   pointer-events: none;
-  transition: left 0.1s linear, top 0.1s linear;
+  transition:
+    left 0.1s linear,
+    top 0.1s linear;
 }
 
 .chart-legend {
@@ -366,4 +372,3 @@ watch([currentPointData, chartRef], () => {
   color: var(--dc-lcd-text-dim);
 }
 </style>
-
