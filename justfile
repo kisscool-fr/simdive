@@ -38,3 +38,6 @@ shell:
 status:
     {{DOCKER_COMPOSE}} ps {{APP_NAME}}
 
+# Pull image
+pull:
+    {{DOCKER_COMPOSE}} pull
