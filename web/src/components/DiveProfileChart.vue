@@ -30,6 +30,13 @@ const props = defineProps<{
   currentTime: number;
 }>();
 
+// Collapsible state (closed by default)
+const isExpanded = ref(false);
+
+function toggleExpanded() {
+  isExpanded.value = !isExpanded.value;
+}
+
 // Generate data points for smooth line (interpolate between waypoints)
 const chartData = computed(() => {
   if (!props.profile) {
@@ -291,31 +298,37 @@ watch(chartData, () => {
 </script>
 
 <template>
-  <div class="dive-profile-chart">
-    <h3 class="chart-title">Profil de plongée</h3>
-    <div class="chart-container">
-      <Line v-if="profile" ref="chartRef" :data="chartData" :options="chartOptions" />
-      <div v-else class="no-profile">
-        <span>Sélectionnez un profil pour visualiser la plongée</span>
+  <div class="dive-profile-chart" :class="{ expanded: isExpanded }">
+    <h3 class="chart-title" @click="toggleExpanded">
+      <span class="chart-title-text">Profil de plongée</span>
+      <span class="chart-title-chevron" :class="{ rotated: isExpanded }">▼</span>
+    </h3>
+
+    <div v-show="isExpanded" class="chart-content">
+      <div class="chart-container">
+        <Line v-if="profile" ref="chartRef" :data="chartData" :options="chartOptions" />
+        <div v-else class="no-profile">
+          <span>Sélectionnez un profil pour visualiser la plongée</span>
+        </div>
+
+        <!-- Current position indicator overlay -->
+        <div
+          v-if="profile && dotPosition"
+          class="current-position-dot"
+          :style="dotPosition"
+        ></div>
       </div>
 
-      <!-- Current position indicator overlay -->
-      <div
-        v-if="profile && dotPosition"
-        class="current-position-dot"
-        :style="dotPosition"
-      ></div>
-    </div>
-
-    <!-- Legend for events -->
-    <div v-if="profile && profile.events.length > 0" class="chart-legend">
-      <div class="legend-item">
-        <span class="legend-color normal"></span>
-        <span class="legend-text">Plongée normale</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-color event"></span>
-        <span class="legend-text">Événement actif</span>
+      <!-- Legend for events -->
+      <div v-if="profile && profile.events.length > 0" class="chart-legend">
+        <div class="legend-item">
+          <span class="legend-color normal"></span>
+          <span class="legend-text">Plongée normale</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color event"></span>
+          <span class="legend-text">Événement actif</span>
+        </div>
       </div>
     </div>
   </div>
@@ -336,7 +349,36 @@ watch(chartData, () => {
   color: var(--dc-accent-cyan);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+
+.chart-title:hover {
+  color: var(--dc-lcd-text);
+}
+
+.chart-title-text {
+  flex: 1;
+}
+
+.chart-title-chevron {
+  font-size: 0.625rem;
+  transition: transform 0.3s ease;
+  transform: rotate(-90deg);
+}
+
+.chart-title-chevron.rotated {
+  transform: rotate(0deg);
+}
+
+.chart-content {
+  margin-top: 12px;
 }
 
 .chart-container {
