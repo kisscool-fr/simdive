@@ -66,30 +66,29 @@ const chartData = computed(() => {
   // const eventTimes = new Set(events.map((e) => e.time));
 
   // Determine segment colors based on events
-  const segmentColors = points.map((point, _index) => {
+  const segmentColors = points.map((point) => {
     // Check if there's an active event around this time
     const hasEvent = events.some((event) => {
       const eventStart = event.time;
       // Events that have an "end" counterpart
       if (event.type === 'breathingRateIncrease') {
-        const endEvent = events.find(
-          (e) => e.type === 'breathingRateDecrease' && e.time > eventStart
-        );
+        const endEvent = events.filter((e) => e.type === 'breathingRateDecrease' && e.time > eventStart)[0];
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
       if (event.type === 'airSharing') {
-        const endEvent = events.find((e) => e.type === 'airSharingEnd' && e.time > eventStart);
+        const endEvent = events.filter((e) => e.type === 'airSharingEnd' && e.time > eventStart)[0];
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
       if (event.type === 'safetyStopStart') {
-        const endEvent = events.find((e) => e.type === 'safetyStopEnd' && e.time > eventStart);
+        const endEvent = events.filter((e) => e.type === 'safetyStopEnd' && e.time > eventStart)[0];
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
       // Point events - highlight just around the event time
-      if (['lowAirWarning', 'criticalAirWarning', 'rapidAscent'].includes(event.type)) {
+      const pointEventTypes = ['lowAirWarning', 'criticalAirWarning', 'rapidAscent'];
+      if (pointEventTypes.indexOf(event.type) !== -1) {
         return Math.abs(point.time - eventStart) < 1;
       }
       return false;
@@ -175,7 +174,7 @@ const chartOptions = computed(() => ({
           family: "'Share Tech Mono', monospace",
           size: 10,
         },
-        callback: function (value: string | number, index: number) {
+        callback: function (_value: string | number, index: number) {
           // Show fewer labels
           if (index % 4 === 0) {
             const labels = chartData.value.labels;
@@ -231,7 +230,7 @@ const chartOptions = computed(() => ({
       },
       callbacks: {
         title: (items: { label: string }[]) => `Temps: ${items[0]?.label || ''} min`,
-        label: (item: { raw: number }) => `Profondeur: ${item.raw?.toFixed(1) || ''} m`,
+        label: (item: { raw: unknown }) => `Profondeur: ${(item.raw as number)?.toFixed(1) || ''} m`,
       },
     },
   },
@@ -240,14 +239,55 @@ const chartOptions = computed(() => ({
 // Canvas ref for drawing the current position dot
 const chartRef = ref<{ chart: ChartJS } | null>(null);
 
-// Draw current position indicator
+// Dot position calculated from chart scales
+const dotPosition = ref<{ left: string; top: string } | null>(null);
+
+// Update dot position using chart's scale system
+function updateDotPosition() {
+  if (!chartRef.value?.chart || !props.profile || !currentPointData.value) {
+    dotPosition.value = null;
+    return;
+  }
+
+  const chart = chartRef.value.chart;
+  const xScale = chart.scales['x'];
+  const yScale = chart.scales['y'];
+
+  if (!xScale || !yScale) {
+    dotPosition.value = null;
+    return;
+  }
+
+  // Find the data index closest to current time
+  const totalTime = props.profile.waypoints[props.profile.waypoints.length - 1]?.time || 1;
+  const timeRatio = props.currentTime / totalTime;
+  const dataIndex = Math.round(timeRatio * (chartData.value.labels.length - 1));
+
+  // Get pixel position from chart scales
+  const xPixel = xScale.getPixelForValue(dataIndex);
+  const yPixel = yScale.getPixelForValue(currentPointData.value.depth);
+
+  // Account for container padding (8px)
+  dotPosition.value = {
+    left: `${xPixel + 8}px`,
+    top: `${yPixel + 8}px`,
+  };
+}
+
+// Watch for changes and update dot position
 watch(
-  [currentPointData, chartRef],
+  [() => props.currentTime, () => props.profile, chartRef],
   () => {
-    // The indicator is handled via annotation plugin or overlay div
+    // Use nextTick to ensure chart is rendered
+    setTimeout(updateDotPosition, 0);
   },
   { immediate: true }
 );
+
+// Also update on chart data changes
+watch(chartData, () => {
+  setTimeout(updateDotPosition, 50);
+});
 </script>
 
 <template>
@@ -261,12 +301,9 @@ watch(
 
       <!-- Current position indicator overlay -->
       <div
-        v-if="profile && currentPointData"
+        v-if="profile && dotPosition"
         class="current-position-dot"
-        :style="{
-          left: `calc(${(currentTime / (profile.waypoints[profile.waypoints.length - 1]?.time || 1)) * 100}% + 55px)`,
-          top: `calc(${(currentPointData.depth / Math.max(...profile.waypoints.map((w) => w.depth), 1)) * 100}% + 15px)`,
-        }"
+        :style="dotPosition"
       ></div>
     </div>
 
