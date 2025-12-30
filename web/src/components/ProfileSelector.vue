@@ -112,7 +112,7 @@ onMounted(loadProfiles);
 
 <style scoped>
 .profile-selector {
-  margin-bottom: 20px;
+  margin-bottom: 4px;
 }
 
 .profile-label {
