@@ -129,14 +129,12 @@ export function useAirConsumption(
   }
 
   /**
-   * Check for air warnings
+   * Check for air warnings (recreational diving thresholds)
    */
   function checkWarnings(): { lowAir: boolean; criticalAir: boolean } {
-    const pressurePercent = (tankPressure.value / initialTankPressure) * 100;
-
     return {
-      lowAir: pressurePercent <= 33, // Below 1/3
-      criticalAir: pressurePercent <= 20, // Below 50 bar typically
+      lowAir: tankPressure.value <= 50, // Reserve at 50 bar
+      criticalAir: tankPressure.value <= 20, // Critical at 20 bar
     };
   }
 
