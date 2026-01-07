@@ -79,7 +79,9 @@ const chartData = computed(() => {
       const eventStart = event.time;
       // Events that have an "end" counterpart
       if (event.type === 'breathingRateIncrease') {
-        const endEvent = events.filter((e) => e.type === 'breathingRateDecrease' && e.time > eventStart)[0];
+        const endEvent = events.filter(
+          (e) => e.type === 'breathingRateDecrease' && e.time > eventStart
+        )[0];
         const endTime = endEvent ? endEvent.time : totalTime;
         return point.time >= eventStart && point.time <= endTime;
       }
@@ -237,7 +239,8 @@ const chartOptions = computed(() => ({
       },
       callbacks: {
         title: (items: { label: string }[]) => `Temps: ${items[0]?.label || ''} min`,
-        label: (item: { raw: unknown }) => `Profondeur: ${(item.raw as number)?.toFixed(1) || ''} m`,
+        label: (item: { raw: unknown }) =>
+          `Profondeur: ${(item.raw as number)?.toFixed(1) || ''} m`,
       },
     },
   },
@@ -312,11 +315,7 @@ watch(chartData, () => {
         </div>
 
         <!-- Current position indicator overlay -->
-        <div
-          v-if="profile && dotPosition"
-          class="current-position-dot"
-          :style="dotPosition"
-        ></div>
+        <div v-if="profile && dotPosition" class="current-position-dot" :style="dotPosition"></div>
       </div>
 
       <!-- Legend for events -->
