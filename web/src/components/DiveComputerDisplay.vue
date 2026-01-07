@@ -179,11 +179,17 @@ const isDescending = computed(() => {
       </div>
 
       <!-- Safety Stop -->
-      <div v-if="diveState.safetyStop.active" class="safety-stop active">
+      <div
+        v-if="diveState.safetyStop.active"
+        class="safety-stop"
+        :class="{ active: diveState.safetyStop.remaining > 0 }"
+      >
         <span class="lcd-label">Palier de sécurité</span>
         <span class="lcd-value"
-          >{{ Math.ceil(diveState.safetyStop.remaining / 60) }}:{{
-            (diveState.safetyStop.remaining % 60).toString().padStart(2, '0')
+          >{{ Math.floor(diveState.safetyStop.remaining / 60) }}:{{
+            Math.floor(diveState.safetyStop.remaining % 60)
+              .toString()
+              .padStart(2, '0')
           }}</span
         >
         <span class="lcd-unit">à {{ diveState.safetyStop.depth }}m</span>
