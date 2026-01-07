@@ -50,6 +50,13 @@ export function useDiveEngine() {
   // Max depth tracking
   const maxDepth = ref(0);
 
+  // Track previous depth and time for smooth rate calculation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let previousRawDepth = 0;
+  let accumulatedTime = 0;
+  let lastRateCalculationDepth = 0;
+  const RATE_CALCULATION_INTERVAL = 1 / 60; // Calculate rate every 1 second (1/60 min)
+
   /**
    * Interpolate depth at a given time from waypoints
    */
@@ -248,11 +255,9 @@ export function useDiveEngine() {
   function updateDiveState(timeDelta: number = 1 / 60): void {
     if (!currentProfile.value || !decoCalculator || !airCalculator) return;
 
-    const previousDepth = diveState.value?.currentDepth ?? 0;
     const currentTime = playback.value.currentTime;
     const currentDepthRaw = interpolateDepth(currentTime, currentProfile.value.waypoints);
-    // Round to 1 decimal place for display and rate calculations
-    // This ensures consistency with previousDepth (which comes from stored rounded value)
+    // Round to 1 decimal place for display
     const currentDepth = Math.round(currentDepthRaw * 10) / 10;
 
     // Update max depth
@@ -272,8 +277,26 @@ export function useDiveEngine() {
     const airState = airCalculator.getAirState(currentDepthRaw);
     const airWarnings = airCalculator.checkWarnings();
 
-    // Calculate ascent rate (using rounded depths for consistency)
-    const ascentState = calculateAscentRate(previousDepth, currentDepth, timeDelta);
+    // Calculate ascent rate using accumulated time for stability
+    accumulatedTime += timeDelta;
+    let ascentState: AscentState;
+
+    if (accumulatedTime >= RATE_CALCULATION_INTERVAL) {
+      // Calculate rate over the accumulated interval for stability
+      ascentState = calculateAscentRate(lastRateCalculationDepth, currentDepthRaw, accumulatedTime);
+      lastRateCalculationDepth = currentDepthRaw;
+      accumulatedTime = 0;
+    } else {
+      // Keep the previous rate until we have enough time accumulated
+      ascentState = diveState.value?.ascent ?? {
+        rate: 0,
+        isViolation: false,
+        maxAllowedRate: MAX_ASCENT_RATE,
+      };
+    }
+
+    // Store raw depth for next calculation
+    previousRawDepth = currentDepthRaw;
 
     // Calculate safety stop state
     const safetyStopState = calculateSafetyStopState(
@@ -354,6 +377,9 @@ export function useDiveEngine() {
     // Reset tracking
     maxDepth.value = 0;
     processedEvents.value.clear();
+    previousRawDepth = 0;
+    accumulatedTime = 0;
+    lastRateCalculationDepth = 0;
 
     // Initialize calculators
     decoCalculator = useDecompression();
