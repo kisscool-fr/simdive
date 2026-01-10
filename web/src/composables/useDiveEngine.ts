@@ -57,6 +57,10 @@ export function useDiveEngine() {
   let lastRateCalculationDepth = 0;
   const RATE_CALCULATION_INTERVAL = 1 / 60; // Calculate rate every 1 second (1/60 min)
 
+  // Track warning latch times (to prevent flickering)
+  let fastAscentWarningUntil = 0; // Simulation time until which warning stays visible
+  const WARNING_LATCH_DURATION = 0.05; // 3 seconds in minutes (3/60)
+
   /**
    * Interpolate depth at a given time from waypoints
    */
@@ -170,7 +174,8 @@ export function useDiveEngine() {
     decoState: ReturnType<typeof useDecompression>['getDecoState'] extends (d: number) => infer R
       ? R
       : never,
-    activeEvents: DiveEvent[]
+    activeEvents: DiveEvent[],
+    currentTime: number
   ): DiveWarning[] {
     const warnings: DiveWarning[] = [];
 
@@ -189,8 +194,13 @@ export function useDiveEngine() {
       });
     }
 
-    // Ascent rate warning
+    // Ascent rate warning with latch to prevent flickering
     if (ascentState.isViolation) {
+      // Extend the warning latch time
+      fastAscentWarningUntil = currentTime + WARNING_LATCH_DURATION;
+    }
+
+    if (currentTime < fastAscentWarningUntil) {
       warnings.push({
         type: 'critical',
         message: 'REMONTÉE TROP RAPIDE',
@@ -309,7 +319,13 @@ export function useDiveEngine() {
     );
 
     // Get warnings
-    const warnings = getActiveWarnings(airWarnings, ascentState, decoState, activeEvents);
+    const warnings = getActiveWarnings(
+      airWarnings,
+      ascentState,
+      decoState,
+      activeEvents,
+      currentTime
+    );
 
     // Update dive state
     diveState.value = {
@@ -383,6 +399,7 @@ export function useDiveEngine() {
     previousRawDepth = 0;
     accumulatedTime = 0;
     lastRateCalculationDepth = 0;
+    fastAscentWarningUntil = 0;
 
     // Initialize calculators
     decoCalculator = useDecompression();
