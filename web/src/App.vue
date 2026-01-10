@@ -4,6 +4,7 @@ import type { DiveProfile, DisplayMode, PlaybackSpeed } from './types/dive';
 import { useDiveEngine } from './composables/useDiveEngine';
 
 import DiveComputerDisplay from './components/DiveComputerDisplay.vue';
+import DiveProfileChart from './components/DiveProfileChart.vue';
 import PlaybackControls from './components/PlaybackControls.vue';
 import ProfileSelector from './components/ProfileSelector.vue';
 import TissueSaturationGraph from './components/TissueSaturationGraph.vue';
@@ -100,6 +101,12 @@ const controlsDisabled = computed(() => !selectedProfile.value);
         <!-- Left Panel: Profile Selection -->
         <aside class="sidebar">
           <ProfileSelector v-model="selectedProfile" @load="handleProfileLoad" />
+
+          <!-- Dive Profile Chart -->
+          <DiveProfileChart
+            :profile="selectedProfile"
+            :current-time="engine.playback.value.currentTime"
+          />
 
           <!-- Display Mode Toggle -->
           <div class="mode-section">
