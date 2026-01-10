@@ -6,7 +6,9 @@ const props = defineProps<{
 }>();
 
 // Tissue half-times for labels
-const halfTimes = [4, 8, 12.5, 18.5, 27, 38, 54, 77, 109, 146, 187, 239, 305, 390, 498, 635];
+const HALF_TIMES = [
+  4, 8, 12.5, 18.5, 27, 38, 54, 77, 109, 146, 187, 239, 305, 390, 498, 635,
+] as const;
 
 // Get bar class based on saturation percentage
 function getBarClass(saturation: number): string {
@@ -20,7 +22,7 @@ const bars = computed(() => {
   return props.saturations.map((sat, index) => ({
     height: Math.max(2, sat),
     class: getBarClass(sat),
-    halfTime: halfTimes[index],
+    halfTime: HALF_TIMES[index],
     saturation: Math.round(sat),
   }));
 });
@@ -68,7 +70,7 @@ const bars = computed(() => {
 
     <div class="tissue-info">
       <span class="info-text">
-        Compartiments 1-16 (demi-vie: {{ halfTimes[0] }} - {{ halfTimes[15] }} min)
+        Compartiments 1-16 (demi-vie: {{ HALF_TIMES[0] }} - {{ HALF_TIMES[15] }} min)
       </span>
     </div>
   </div>
