@@ -51,8 +51,6 @@ export function useDiveEngine() {
   const maxDepth = ref(0);
 
   // Track previous depth and time for smooth rate calculation
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let previousRawDepth = 0;
   let accumulatedTime = 0;
   let lastRateCalculationDepth = 0;
   const RATE_CALCULATION_INTERVAL = 1 / 60; // Calculate rate every 1 second (1/60 min)
@@ -307,9 +305,6 @@ export function useDiveEngine() {
       };
     }
 
-    // Store raw depth for next calculation
-    previousRawDepth = currentDepthRaw;
-
     // Calculate safety stop state
     const safetyStopState = calculateSafetyStopState(
       currentDepth,
@@ -396,7 +391,6 @@ export function useDiveEngine() {
     // Reset tracking
     maxDepth.value = 0;
     processedEvents.value.clear();
-    previousRawDepth = 0;
     accumulatedTime = 0;
     lastRateCalculationDepth = 0;
     fastAscentWarningUntil = 0;

@@ -62,7 +62,8 @@ const chartData = computed(() => {
   }
 
   // Ensure last point is included
-  if (points.length > 0 && points[points.length - 1].time < totalTime) {
+  const lastPoint = points[points.length - 1];
+  if (lastPoint && lastPoint.time < totalTime) {
     points.push({
       time: totalTime,
       depth: interpolateDepth(totalTime, waypoints),
