@@ -118,7 +118,8 @@ export function useDiveEngine() {
   function calculateSafetyStopState(
     currentDepth: number,
     maxDepthReached: number,
-    previousState: SafetyStopState | null
+    previousState: SafetyStopState | null,
+    timeDelta: number // in minutes
   ): SafetyStopState {
     const needsSafetyStop = maxDepthReached >= 10; // Safety stop if max depth >= 10m
     const atSafetyStopDepth = currentDepth >= 4 && currentDepth <= 6;
@@ -126,8 +127,9 @@ export function useDiveEngine() {
     // If we're at safety stop depth and need one
     if (needsSafetyStop && atSafetyStopDepth) {
       if (previousState?.active) {
-        // Continue counting down
-        const remaining = Math.max(0, previousState.remaining - 1);
+        // Continue counting down - timeDelta is in minutes, remaining is in seconds
+        const elapsedSeconds = timeDelta * 60;
+        const remaining = Math.max(0, previousState.remaining - elapsedSeconds);
         return {
           required: true,
           active: true,
@@ -302,7 +304,8 @@ export function useDiveEngine() {
     const safetyStopState = calculateSafetyStopState(
       currentDepth,
       maxDepth.value,
-      diveState.value?.safetyStop ?? null
+      diveState.value?.safetyStop ?? null,
+      timeDelta
     );
 
     // Get warnings
