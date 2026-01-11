@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -285,11 +285,10 @@ function updateDotPosition() {
   };
 }
 
-// Watch for changes and update dot position
+// Watch for profile changes and initial setup
 watch(
-  [() => props.currentTime, () => props.profile, chartRef],
+  [() => props.profile, chartRef],
   () => {
-    // Use nextTick to ensure chart is rendered
     setTimeout(updateDotPosition, 0);
   },
   { immediate: true }
@@ -298,6 +297,24 @@ watch(
 // Also update on chart data changes
 watch(chartData, () => {
   setTimeout(updateDotPosition, 50);
+});
+
+// Periodic update for smooth dot movement during playback
+let updateInterval: ReturnType<typeof setInterval> | null = null;
+
+onMounted(() => {
+  // Update dot position every 500ms for smooth movement
+  updateInterval = setInterval(() => {
+    if (isExpanded.value && props.profile) {
+      updateDotPosition();
+    }
+  }, 500);
+});
+
+onUnmounted(() => {
+  if (updateInterval) {
+    clearInterval(updateInterval);
+  }
 });
 </script>
 
