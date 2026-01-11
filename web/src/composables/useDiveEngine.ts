@@ -50,6 +50,9 @@ export function useDiveEngine() {
   // Max depth tracking
   const maxDepth = ref(0);
 
+  // Tissue saturation percentages (reactive storage)
+  const tissueSaturations = ref<number[]>([]);
+
   // Track previous depth and time for smooth rate calculation
   let accumulatedTime = 0;
   let lastRateCalculationDepth = 0;
@@ -282,6 +285,9 @@ export function useDiveEngine() {
     decoCalculator.updateTissues(currentDepthRaw, timeDelta);
     const decoState = decoCalculator.getDecoState(currentDepthRaw);
 
+    // Update tissue saturations for reactive display
+    tissueSaturations.value = decoCalculator.tissueSaturationPercentages.value;
+
     // Update air consumption (using raw depth for precision)
     airCalculator.consumeAir(currentDepthRaw, timeDelta, currentTime);
     const airState = airCalculator.getAirState(currentDepthRaw);
@@ -394,6 +400,7 @@ export function useDiveEngine() {
     accumulatedTime = 0;
     lastRateCalculationDepth = 0;
     fastAscentWarningUntil = 0;
+    tissueSaturations.value = [];
 
     // Initialize calculators
     decoCalculator = useDecompression();
@@ -540,7 +547,7 @@ export function useDiveEngine() {
   });
 
   const tissueSaturationPercentages = computed(() => {
-    return decoCalculator?.tissueSaturationPercentages.value ?? [];
+    return tissueSaturations.value;
   });
 
   return {
