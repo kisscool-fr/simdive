@@ -1,6 +1,6 @@
 services:
   simdive:
-    image: node:24.11-alpine3.22
+    image: node:24.12-alpine3.23
     container_name: simdive
     ports:
       - '5173:5173'
