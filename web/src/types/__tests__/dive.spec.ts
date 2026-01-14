@@ -18,7 +18,7 @@ describe('Dive Constants', () => {
     });
 
     it('each compartment has required properties', () => {
-      BUHLMANN_ZHL16C.forEach((compartment, index) => {
+      BUHLMANN_ZHL16C.forEach((compartment) => {
         expect(compartment).toHaveProperty('halfTime');
         expect(compartment).toHaveProperty('a');
         expect(compartment).toHaveProperty('b');
