@@ -133,9 +133,100 @@ export interface PlaybackControl {
 // Display Mode
 export type DisplayMode = 'essential' | 'expert';
 
+// Layout Configuration Types
+
+/** Available cell types for dive computer display */
+export type CellType =
+  | 'depth'
+  | 'time'
+  | 'ndl'
+  | 'air'
+  | 'autonomy'
+  | 'tts'
+  | 'ceiling'
+  | 'ascentRate'
+  | 'sac';
+
+/** Configuration for a single display cell */
+export interface LayoutCell {
+  type: CellType;
+  span?: number; // Grid column span (default: 1)
+  primary?: boolean; // Use primary/highlighted styling
+  mode?: DisplayMode; // Only show in this display mode
+  showMax?: boolean; // For depth: show max depth subtitle
+  showGauge?: boolean; // For air: show gauge bar
+  label?: string; // Custom label override
+  labelDeco?: string; // Alternative label when in deco (for NDL cell)
+}
+
+/** Grid configuration for layout */
+export interface LayoutGrid {
+  columns: number;
+  gap: string;
+}
+
+/** Header configuration */
+export interface LayoutHeader {
+  title: string;
+  showModeToggle: boolean;
+}
+
+/** Section visibility configuration */
+export interface LayoutSections {
+  safetyStop: boolean;
+  decoStops: boolean | DisplayMode; // true = always, false = never, DisplayMode = only in that mode
+  warnings: boolean;
+}
+
+/** Theme color configuration */
+export interface LayoutTheme {
+  bgPrimary?: string;
+  bgSecondary?: string;
+  bgPanel?: string;
+  bgLcd?: string;
+  lcdText?: string;
+  lcdTextDim?: string;
+  lcdWarning?: string;
+  lcdCritical?: string;
+  lcdInfo?: string;
+  accentCyan?: string;
+  accentBlue?: string;
+  accentPurple?: string;
+  gaugeFull?: string;
+  gaugeMid?: string;
+  gaugeLow?: string;
+  gaugeCritical?: string;
+  [key: string]: string | undefined; // Allow additional custom theme variables
+}
+
+/** Complete layout configuration */
+export interface LayoutConfig {
+  id: string;
+  name: string;
+  description: string;
+  grid: LayoutGrid;
+  header: LayoutHeader;
+  cells: LayoutCell[];
+  sections: LayoutSections;
+  theme: LayoutTheme;
+}
+
+/** Layout entry in the layouts index */
+export interface LayoutIndexEntry {
+  id: string;
+  name: string;
+  path: string;
+}
+
+/** Layouts index file structure */
+export interface LayoutsIndex {
+  layouts: LayoutIndexEntry[];
+}
+
 // Application State
 export interface AppState {
   selectedProfile: DiveProfile | null;
+  selectedLayout: LayoutConfig | null;
   playback: PlaybackControl;
   diveState: DiveState | null;
   displayMode: DisplayMode;

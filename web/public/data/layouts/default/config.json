@@ -1,0 +1,85 @@
+{
+  "$schema": "../../layout-schema.json",
+  "$comment": "Layout configuration for SimDive. Instructors can create custom layouts by copying this folder and modifying the configuration.",
+  "id": "default",
+  "name": "SimDive Default",
+  "description": "Layout par défaut avec affichage complet des informations de plongée",
+  "grid": {
+    "columns": 2,
+    "gap": "16px"
+  },
+  "header": {
+    "title": "SimDive",
+    "showModeToggle": true
+  },
+  "cells": [
+    {
+      "type": "depth",
+      "span": 2,
+      "primary": true,
+      "showMax": true,
+      "label": "Profondeur"
+    },
+    {
+      "type": "time",
+      "label": "Temps"
+    },
+    {
+      "type": "ndl",
+      "label": "NDL",
+      "labelDeco": "Palier"
+    },
+    {
+      "type": "air",
+      "showGauge": true,
+      "label": "Pression"
+    },
+    {
+      "type": "autonomy",
+      "label": "Autonomie"
+    },
+    {
+      "type": "tts",
+      "mode": "expert",
+      "label": "TTS"
+    },
+    {
+      "type": "ceiling",
+      "mode": "expert",
+      "label": "Plafond"
+    },
+    {
+      "type": "ascentRate",
+      "mode": "expert",
+      "label": "Vitesse"
+    },
+    {
+      "type": "sac",
+      "mode": "expert",
+      "label": "Conso"
+    }
+  ],
+  "sections": {
+    "safetyStop": true,
+    "decoStops": "expert",
+    "warnings": true
+  },
+  "theme": {
+    "bgPrimary": "#0a1628",
+    "bgSecondary": "#0f2847",
+    "bgPanel": "#122a4d",
+    "bgLcd": "#1a3a5c",
+    "lcdText": "#00ff88",
+    "lcdTextDim": "#00994d",
+    "lcdWarning": "#ffcc00",
+    "lcdCritical": "#ff3344",
+    "lcdInfo": "#00aaff",
+    "accentCyan": "#00d4ff",
+    "accentBlue": "#0066cc",
+    "accentPurple": "#6644ff",
+    "gaugeFull": "#00ff88",
+    "gaugeMid": "#ffcc00",
+    "gaugeLow": "#ff6600",
+    "gaugeCritical": "#ff3344"
+  }
+}
