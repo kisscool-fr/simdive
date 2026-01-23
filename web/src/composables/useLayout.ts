@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import type { LayoutConfig, LayoutsIndex, LayoutIndexEntry, LayoutTheme } from '../types/dive';
 
 // Default theme values (matching dive-computer.css)
@@ -51,6 +51,7 @@ export function useLayout() {
   const layoutConfig = ref<LayoutConfig | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const initialized = ref(false); // Tracks if layouts index has been loaded at least once
 
   /**
    * Load available layouts from the layouts index
@@ -78,6 +79,7 @@ export function useLayout() {
       console.error('Failed to load layouts index:', e);
     } finally {
       loading.value = false;
+      initialized.value = true;
     }
   }
 
@@ -189,6 +191,7 @@ export function useLayout() {
     layoutConfig,
     loading: isLoading,
     error,
+    initialized,
 
     // Computed
     selectedLayout,
