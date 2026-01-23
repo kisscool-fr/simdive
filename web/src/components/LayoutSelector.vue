@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue';
-import type { LayoutConfig, LayoutIndexEntry } from '../types/dive';
+import type { LayoutConfig } from '../types/dive';
 import { useLayout } from '../composables/useLayout';
 
 const props = defineProps<{
@@ -55,7 +55,9 @@ const selectedLayout = computed(() => layout.layoutConfig.value);
   <div class="layout-selector">
     <label class="layout-label">Affichage ordinateur</label>
 
-    <div v-if="layout.loading.value" class="loading">Chargement des layouts...</div>
+    <div v-if="layout.loading.value || !layout.initialized.value" class="loading">
+      Chargement des layouts...
+    </div>
 
     <div v-else-if="layout.error.value" class="error">
       {{ layout.error.value }}
@@ -73,9 +75,7 @@ const selectedLayout = computed(() => layout.layoutConfig.value);
       <div v-if="selectedLayout" class="layout-description">
         <p>{{ selectedLayout.description }}</p>
         <div class="layout-details">
-          <span class="detail">
-            <strong>Cellules:</strong> {{ selectedLayout.cells.length }}
-          </span>
+          <span class="detail"> <strong>Cellules:</strong> {{ selectedLayout.cells.length }} </span>
           <span class="detail">
             <strong>Grille:</strong> {{ selectedLayout.grid.columns }} colonnes
           </span>

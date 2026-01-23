@@ -132,7 +132,9 @@ function getUnit(type: string): string {
         <span class="lcd-value">{{ formatDepth(diveState.currentDepth) }}</span>
         <span class="lcd-unit">m</span>
       </div>
-      <span v-if="cell.showMax" class="lcd-sublabel">Max: {{ formatDepth(diveState.maxDepth) }}m</span>
+      <span v-if="cell.showMax" class="lcd-sublabel"
+        >Max: {{ formatDepth(diveState.maxDepth) }}m</span
+      >
     </template>
 
     <!-- Time Cell -->
