@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { DiveState, DisplayMode, LayoutConfig, LayoutCell } from '../types/dive';
+import type { DiveState, DisplayMode, LayoutConfig } from '../types/dive';
 import DisplayCell from './DisplayCell.vue';
 
 const props = defineProps<{
@@ -38,19 +38,21 @@ const layout = computed(() => props.layoutConfig || defaultLayout);
 const visibleCells = computed(() => {
   if (!props.diveState) return [];
 
-  return layout.value.cells.filter((cell) => {
-    // If cell has no mode restriction, always show
-    if (!cell.mode) return true;
+  return layout.value.cells
+    .filter((cell) => {
+      // If cell has no mode restriction, always show
+      if (!cell.mode) return true;
 
-    // If cell has mode restriction, only show in that mode
-    return cell.mode === props.displayMode;
-  }).filter((cell) => {
-    // Special handling for ceiling cell - only show when ceiling > 0
-    if (cell.type === 'ceiling' && props.diveState) {
-      return props.diveState.deco.ceiling > 0;
-    }
-    return true;
-  });
+      // If cell has mode restriction, only show in that mode
+      return cell.mode === props.displayMode;
+    })
+    .filter((cell) => {
+      // Special handling for ceiling cell - only show when ceiling > 0
+      if (cell.type === 'ceiling' && props.diveState) {
+        return props.diveState.deco.ceiling > 0;
+      }
+      return true;
+    });
 });
 
 // Grid style based on layout config
