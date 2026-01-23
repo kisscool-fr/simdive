@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { DiveProfile, DisplayMode, PlaybackSpeed } from './types/dive';
+import type { DiveProfile, DisplayMode, PlaybackSpeed, LayoutConfig } from './types/dive';
 import { useDiveEngine } from './composables/useDiveEngine';
 
 import DiveComputerDisplay from './components/DiveComputerDisplay.vue';
 import DiveProfileChart from './components/DiveProfileChart.vue';
 import PlaybackControls from './components/PlaybackControls.vue';
 import ProfileSelector from './components/ProfileSelector.vue';
+import LayoutSelector from './components/LayoutSelector.vue';
 import TissueSaturationGraph from './components/TissueSaturationGraph.vue';
 import ModeToggle from './components/ModeToggle.vue';
 
@@ -44,6 +45,9 @@ const displayMode = ref<DisplayMode>('essential');
 
 // Selected profile
 const selectedProfile = ref<DiveProfile | null>(null);
+
+// Selected layout
+const selectedLayout = ref<LayoutConfig | null>(null);
 
 // Handle profile load
 function handleProfileLoad(profile: DiveProfile) {
@@ -108,6 +112,9 @@ const controlsDisabled = computed(() => !selectedProfile.value);
             :current-time="engine.playback.value.currentTime"
           />
 
+          <!-- Layout Selector -->
+          <LayoutSelector v-model="selectedLayout" />
+
           <!-- Display Mode Toggle -->
           <div class="mode-section">
             <label class="section-label">Mode d'affichage</label>
@@ -128,7 +135,11 @@ const controlsDisabled = computed(() => !selectedProfile.value);
 
         <!-- Main Panel: Dive Computer -->
         <div class="main-panel">
-          <DiveComputerDisplay :dive-state="engine.diveState.value" :display-mode="displayMode">
+          <DiveComputerDisplay
+            :dive-state="engine.diveState.value"
+            :display-mode="displayMode"
+            :layout-config="selectedLayout"
+          >
             <template #mode-toggle>
               <ModeToggle v-model="displayMode" />
             </template>
