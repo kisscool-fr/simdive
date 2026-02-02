@@ -1,14 +1,18 @@
+set quiet
 set windows-shell := ["cmd.exe", "/c"]
 
-set quiet
-
 # Justfile for simdive Docker management
+DOCKER_EXEC := "docker exec"
 DOCKER_COMPOSE := "docker compose"
 APP_NAME := "simdive"
 
 # Default recipe: show available commands
 default:
     @just --list
+
+# Pull images
+pull:
+    {{DOCKER_COMPOSE}} pull --ignore-buildable
 
 # Start the Docker container in detached mode
 run:
@@ -32,12 +36,8 @@ logs:
 
 # Open a shell in the running container
 shell:
-    docker exec -it {{APP_NAME}} sh
+    {{DOCKER_EXEC}} -it {{APP_NAME}} sh
 
 # Check container status
 status:
     {{DOCKER_COMPOSE}} ps {{APP_NAME}}
-
-# Pull image
-pull:
-    {{DOCKER_COMPOSE}} pull
