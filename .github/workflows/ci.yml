@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  NODE_VERSION: '24'
-
 jobs:
   setup:
     name: Checkout & Cache
@@ -20,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: '.nvmrc'
 
       - name: Cache node_modules
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb  # v5.0.1
@@ -34,8 +31,8 @@ jobs:
         working-directory: web
         run: npm ci
 
-  check:
-    name: Lint, Format & Test Check
+  lint-format:
+    name: Lint & Format
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +42,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: '.nvmrc'
 
       - name: Restore node_modules cache
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb  # v5.0.1
@@ -61,7 +58,41 @@ jobs:
         working-directory: web
         run: npm run format:check
 
+  test:
+    name: Test
+    needs: lint-format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Restore node_modules cache
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb  # v5.0.1
+        with:
+          path: web/node_modules
+          key: node-modules-${{ hashFiles('web/package-lock.json') }}
+
       - name: Run tests
         working-directory: web
         run: npm run test:run
+
+  gitleaks:
+    name: Gitleaks Secret Scan
+    needs: lint-format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
