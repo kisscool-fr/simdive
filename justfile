@@ -2,6 +2,7 @@ set quiet
 set windows-shell := ["cmd.exe", "/c"]
 
 # Justfile for simdive Docker management
+export NODE_VERSION := if os() == "windows" { `type .nvmrc` } else { `cat .nvmrc` }
 DOCKER_EXEC := "docker exec"
 DOCKER_COMPOSE := "docker compose"
 APP_NAME := "simdive"
