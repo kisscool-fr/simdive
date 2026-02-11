@@ -1,0 +1,9 @@
+{
+  "layouts": [
+    {
+      "id": "default",
+      "name": "SimDive Default",
+      "path": "default"
+    }
+  ]
+}
