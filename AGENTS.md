@@ -17,17 +17,13 @@
 
 ### Validation
 
-To validate changes, always run:
-1. `just run`
-  - Start docker container
-2. `just shell`
-  - Log into an interative shell into docker container
-3. `npm run lint`
-  - Run linter
-    - If errors occurs, run `npm run lint:fix` for automatic fix
-4. `npm run format:check`
-  - Run format checker
-    - If errors occurs, run `npm run format` for automatic formater
-5. `npm run test:run`
-  - Run unit test without watch mode
+To validate changes, run `just ci`. This will, in order:
+1. Start the docker container
+2. Run linter
+3. Run format checker
+4. Run unit tests
+
+If errors occur, use `just lint fix` or `just format` to auto-fix.
+
+> For arbitrary commands inside the container, use `just exec <command>` (e.g. `just exec npm install`).
 
