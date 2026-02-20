@@ -6,38 +6,61 @@ DOCKER_EXEC := "docker exec"
 DOCKER_COMPOSE := "docker compose"
 APP_NAME := "simdive"
 
-# Default recipe: show available commands
+[doc("Show available commands")]
 default:
     @just --list
 
-# Pull images
+[doc("Pull docker images")]
 pull:
     {{DOCKER_COMPOSE}} pull --ignore-buildable
 
-# Start the Docker container in detached mode
+[doc("Start the docker container in detached mode")]
 run:
     {{DOCKER_COMPOSE}} up -d {{APP_NAME}}
 
-# Start the Docker container with logs attached
+[doc("Start the docker container with logs attached")]
 run-attached:
     {{DOCKER_COMPOSE}} up {{APP_NAME}}
 
-# Stop the Docker container
+[doc("Stop the docker container")]
 stop:
     {{DOCKER_COMPOSE}} down {{APP_NAME}}
 
-# Restart the Docker container
+[doc("Restart the docker container")]
 restart:
     {{DOCKER_COMPOSE}} restart {{APP_NAME}}
 
-# Show container logs
+[doc("Show container logs")]
 logs:
     {{DOCKER_COMPOSE}} logs -f {{APP_NAME}}
 
-# Open a shell in the running container
+[doc("Open a shell in the running container")]
 shell:
     {{DOCKER_EXEC}} -it {{APP_NAME}} sh
 
-# Check container status
+[doc("Check container status")]
 status:
     {{DOCKER_COMPOSE}} ps {{APP_NAME}}
+
+[doc("Run an arbitrary command in the container")]
+exec +ARGS:
+    {{DOCKER_EXEC}} {{APP_NAME}} {{ARGS}}
+
+[doc("Run linter (`just lint fix` for automatic fix)")]
+lint *ACTION:
+    {{DOCKER_EXEC}} {{APP_NAME}} npm run {{ if ACTION == "fix" { "lint:fix" } else { "lint" } }}
+
+[doc("Run formatter (`just format check` to check only)")]
+format *ACTION:
+    {{DOCKER_EXEC}} {{APP_NAME}} npm run {{ if ACTION == "check" { "format:check" } else { "format" } }}
+
+alias tests := test
+[doc("Run unit tests without watch mode")]
+test:
+    {{DOCKER_EXEC}} {{APP_NAME}} npm run test:run
+
+[doc("Run syntax check: lint and format check")]
+check: run lint (format "check")
+
+[doc("Run full validation: lint, format check, and tests")]
+ci: run lint (format "check") test
