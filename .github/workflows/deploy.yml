@@ -12,6 +12,9 @@ on:
           - production
           - preview
 
+permissions:
+  contents: read
+
 env:
   CLOUDFLARE_PROJECT_NAME: 'simdive'
 
