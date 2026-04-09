@@ -6,11 +6,15 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'production'
+        default: 'preview'
         type: choice
         options:
-          - production
           - preview
+          - production
+      ref:
+        description: 'Tag or branch to deploy (e.g. v1.2.0)'
+        required: true
+        default: 'main'
 
 permissions:
   contents: read
@@ -25,6 +29,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
