@@ -137,15 +137,7 @@ export type DisplayMode = 'essential' | 'expert';
 
 /** Available cell types for dive computer display */
 export type CellType =
-  | 'depth'
-  | 'time'
-  | 'ndl'
-  | 'air'
-  | 'autonomy'
-  | 'tts'
-  | 'ceiling'
-  | 'ascentRate'
-  | 'sac';
+  'depth' | 'time' | 'ndl' | 'air' | 'autonomy' | 'tts' | 'ceiling' | 'ascentRate' | 'sac';
 
 /** Configuration for a single display cell */
 export interface LayoutCell {
