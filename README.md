@@ -17,6 +17,7 @@ SimDive permet aux moniteurs de plongée de simuler des plongées virtuelles ave
 ## ✨ Fonctionnalités
 
 - **Affichage réaliste** d'un ordinateur de plongée avec style LCD
+- **Layouts personnalisables** : créez vos propres affichages d'ordinateur de plongée
 - **Deux modes d'affichage** :
   - **Essentiel** : Profondeur, temps, NDL, pression d'air
   - **Expert** : Ajoute saturation des tissus, TTS, paliers, vitesse de remontée
@@ -102,12 +103,122 @@ Les profils de plongée sont définis dans `public/data/dive-profiles.json`. Les
 - `rapidAscent` : Remontée rapide
 - `safetyStopStart` / `safetyStopEnd` : Palier de sécurité
 
+## 🖥️ Configuration des layouts d'ordinateur
+
+Les layouts permettent de personnaliser l'apparence et les informations affichées par l'ordinateur de plongée. Les enseignants peuvent créer leurs propres layouts pour simuler différents modèles d'ordinateurs.
+
+### Structure des fichiers
+
+```
+public/data/layouts/
+├── layouts.json           # Index des layouts disponibles
+└── default/
+    └── config.json        # Configuration du layout par défaut
+```
+
+### Créer un nouveau layout
+
+1. Créez un nouveau dossier dans `public/data/layouts/` (ex: `suunto-style/`)
+2. Copiez `default/config.json` dans votre nouveau dossier
+3. Modifiez la configuration selon vos besoins
+4. Ajoutez une entrée dans `layouts.json` :
+
+```json
+{
+  "layouts": [
+    { "id": "default", "name": "SimDive Default", "path": "default" },
+    { "id": "suunto-style", "name": "Style Suunto", "path": "suunto-style" }
+  ]
+}
+```
+
+### Structure d'un layout
+
+```json
+{
+  "id": "default",
+  "name": "SimDive Default",
+  "description": "Layout par défaut avec affichage complet",
+  "grid": { "columns": 2, "gap": "16px" },
+  "header": { "title": "SimDive", "showModeToggle": true },
+  "cells": [
+    { "type": "depth", "span": 2, "primary": true, "showMax": true, "label": "Profondeur" },
+    { "type": "time", "label": "Temps" },
+    { "type": "ndl", "label": "NDL", "labelDeco": "Palier" },
+    { "type": "air", "showGauge": true, "label": "Pression" },
+    { "type": "autonomy", "label": "Autonomie" },
+    { "type": "tts", "mode": "expert", "label": "TTS" },
+    { "type": "ceiling", "mode": "expert", "label": "Plafond" },
+    { "type": "ascentRate", "mode": "expert", "label": "Vitesse" },
+    { "type": "sac", "mode": "expert", "label": "Conso" }
+  ],
+  "sections": {
+    "safetyStop": true,
+    "decoStops": "expert",
+    "warnings": true
+  },
+  "theme": {
+    "lcdText": "#00ff88",
+    "lcdWarning": "#ffcc00",
+    "lcdCritical": "#ff3344",
+    "accentCyan": "#00d4ff"
+  }
+}
+```
+
+### Types de cellules disponibles
+
+| Type        | Description                          | Options                    |
+| ----------- | ------------------------------------ | -------------------------- |
+| `depth`     | Profondeur actuelle                  | `showMax`, `primary`       |
+| `time`      | Temps de plongée                     | -                          |
+| `ndl`       | No-Deco Limit / Palier               | `labelDeco`                |
+| `air`       | Pression du bloc                     | `showGauge`                |
+| `autonomy`  | Temps d'air restant                  | -                          |
+| `tts`       | Time To Surface                      | -                          |
+| `ceiling`   | Plafond de décompression             | -                          |
+| `ascentRate`| Vitesse de remontée                  | -                          |
+| `sac`       | Consommation instantanée             | -                          |
+
+### Options des cellules
+
+| Option      | Type      | Description                                           |
+| ----------- | --------- | ----------------------------------------------------- |
+| `type`      | string    | Type de cellule (obligatoire)                         |
+| `label`     | string    | Libellé affiché                                       |
+| `span`      | number    | Nombre de colonnes occupées (défaut: 1)               |
+| `primary`   | boolean   | Style mis en valeur                                   |
+| `mode`      | string    | Afficher uniquement en mode `essential` ou `expert`   |
+| `showMax`   | boolean   | Pour depth: afficher la profondeur max                |
+| `showGauge` | boolean   | Pour air: afficher la jauge graphique                 |
+| `labelDeco` | string    | Pour ndl: libellé alternatif en décompression         |
+
+### Personnalisation du thème
+
+Les couleurs peuvent être personnalisées dans la section `theme` :
+
+| Variable       | Description                    | Défaut    |
+| -------------- | ------------------------------ | --------- |
+| `lcdText`      | Texte principal LCD            | `#00ff88` |
+| `lcdTextDim`   | Texte secondaire LCD           | `#00994d` |
+| `lcdWarning`   | Couleur d'alerte               | `#ffcc00` |
+| `lcdCritical`  | Couleur critique               | `#ff3344` |
+| `accentCyan`   | Accent cyan                    | `#00d4ff` |
+| `accentBlue`   | Accent bleu                    | `#0066cc` |
+| `bgPrimary`    | Fond principal                 | `#0a1628` |
+| `bgPanel`      | Fond des panneaux              | `#122a4d` |
+| `gaugeFull`    | Jauge pleine                   | `#00ff88` |
+| `gaugeLow`     | Jauge basse                    | `#ff6600` |
+| `gaugeCritical`| Jauge critique                 | `#ff3344` |
+
 ## 🏗️ Architecture
 
 ```
 src/
 ├── components/
-│   ├── DiveComputerDisplay.vue  # Affichage principal
+│   ├── DiveComputerDisplay.vue  # Affichage principal (config-driven)
+│   ├── DisplayCell.vue          # Cellule d'affichage générique
+│   ├── LayoutSelector.vue       # Sélection du layout
 │   ├── PlaybackControls.vue     # Contrôles lecture
 │   ├── ProfileSelector.vue      # Sélection profil
 │   ├── TissueSaturationGraph.vue # Graphique tissus
@@ -116,11 +227,19 @@ src/
 ├── composables/
 │   ├── useDiveEngine.ts         # Moteur de simulation
 │   ├── useDecompression.ts      # Calculs déco (Bühlmann)
-│   └── useAirConsumption.ts     # Calculs air
+│   ├── useAirConsumption.ts     # Calculs air
+│   └── useLayout.ts             # Gestion des layouts
 ├── types/
 │   └── dive.ts                  # Types TypeScript
 └── assets/styles/
     └── dive-computer.css        # Styles LCD
+
+public/data/
+├── dive-profiles.json           # Profils de plongée
+└── layouts/
+    ├── layouts.json             # Index des layouts
+    └── default/
+        └── config.json          # Configuration layout par défaut
 ```
 
 ## ⚠️ Avertissement
