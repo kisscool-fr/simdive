@@ -1,0 +1,78 @@
+name: 🐛 Signaler un bug
+description: Un comportement inattendu ou un calcul qui semble incorrect
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler ce problème ! Avant de continuer, vérifiez qu'il n'a pas déjà été [signalé](https://github.com/kisscool-fr/simdive/issues).
+
+        ⚠️ Pour une faille de sécurité, n'ouvrez pas d'issue publique : consultez la [politique de sécurité](https://github.com/kisscool-fr/simdive/blob/main/SECURITY.md).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Décrivez le problème de manière claire et concise.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      description: Comment reproduire le problème ?
+      placeholder: |
+        1. Sélectionner le profil « ... »
+        2. Passer en mode Expert
+        3. Lancer la lecture en vitesse x5
+        4. Observer ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+      description: |
+        Qu'auriez-vous dû observer ?
+        S'il s'agit d'un calcul (NDL, paliers, saturation…), indiquez si possible la valeur attendue et sa source (table, autre logiciel, référence).
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportement observé
+      description: Qu'avez-vous observé ? Ajoutez des captures d'écran si besoin.
+    validations:
+      required: true
+
+  - type: input
+    id: profile
+    attributes:
+      label: Profil de plongée utilisé
+      description: Nom ou `id` du profil, ou collez le JSON s'il s'agit d'un profil personnalisé.
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environnement
+      options:
+        - Démo en ligne (simdive.pages.dev)
+        - Installation locale (Docker)
+        - Installation locale (sans Docker)
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Navigateur et système
+      placeholder: ex. Firefox 140 sur Windows 11
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Informations complémentaires
+      description: Logs de la console du navigateur, version/commit, etc.

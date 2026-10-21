@@ -1,0 +1,44 @@
+name: 💡 Proposer une fonctionnalité
+description: Une idée pour améliorer SimDive
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci pour votre idée ! Vérifiez qu'elle n'a pas déjà été [proposée](https://github.com/kisscool-fr/simdive/issues).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Besoin
+      description: Quel problème ou besoin pédagogique cette fonctionnalité résout-elle ?
+      placeholder: En cours de niveau 2, j'aimerais pouvoir montrer à mes élèves ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution proposée
+      description: Décrivez ce que vous aimeriez voir, le plus précisément possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagées
+      description: Avez-vous pensé à d'autres façons de répondre à ce besoin ?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Informations complémentaires
+      description: Captures d'écran, maquettes, références (ex. fonctionnement d'e-Plouf ou d'un ordinateur de plongée réel)...
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: Je suis prêt·e à contribuer à la réalisation de cette fonctionnalité
