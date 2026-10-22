@@ -66,6 +66,21 @@ export function useDecompression(gfLow = 0.3, gfHigh = 0.85) {
   }
 
   /**
+   * Gradient factor applied at a given depth: GF Low at the first stop,
+   * linearly increasing to GF High at the surface
+   */
+  function getGradientFactor(depth: number, firstStopDepth: number): number {
+    if (firstStopDepth <= 0) {
+      return gradientFactorHigh.value;
+    }
+
+    const depthRatio = Math.min(1, depth / firstStopDepth);
+    return (
+      gradientFactorHigh.value + (gradientFactorLow.value - gradientFactorHigh.value) * depthRatio
+    );
+  }
+
+  /**
    * Calculate gradient factor adjusted M-value
    */
   function getGFMValue(
@@ -74,17 +89,7 @@ export function useDecompression(gfLow = 0.3, gfHigh = 0.85) {
     firstStopDepth: number
   ): number {
     const currentMValue = getMValue(compartment, depth);
-
-    // Calculate gradient factor based on depth between first stop and surface
-    let gf: number;
-    if (firstStopDepth <= 0) {
-      gf = gradientFactorHigh.value;
-    } else {
-      const depthRatio = depth / firstStopDepth;
-      gf =
-        gradientFactorHigh.value +
-        (gradientFactorLow.value - gradientFactorHigh.value) * depthRatio;
-    }
+    const gf = getGradientFactor(depth, firstStopDepth);
 
     // Apply gradient factor
     const ambientPressure = getAmbientPressure(depth);
@@ -92,27 +97,60 @@ export function useDecompression(gfLow = 0.3, gfHigh = 0.85) {
   }
 
   /**
-   * Calculate ceiling depth (minimum safe depth)
+   * Calculate the deepest tolerated depth for the given tissues at a fixed gradient factor
+   * Solving pN2 = P_amb + gf * (a + P_amb / b - P_amb) for P_amb
    */
-  function calculateCeiling(): number {
+  function calculateFixedGFCeiling(tissueList: TissueCompartment[], gf: number): number {
     let maxCeiling = 0;
 
-    for (const tissue of tissues.value) {
-      // Calculate the depth at which this tissue would be at its M-value
-      // Rearranging: P_ambient = b * (pN2 - a)
-      const ambientPressure = tissue.b * (tissue.pN2 - tissue.a);
+    for (const tissue of tissueList) {
+      const ambientPressure = (tissue.pN2 - gf * tissue.a) / (gf / tissue.b + 1 - gf);
       const depth = (ambientPressure - SURFACE_PRESSURE) / METERS_TO_BAR;
 
-      // Apply gradient factor adjustment
-      const gfAdjustedDepth = depth / gradientFactorLow.value;
-
-      if (gfAdjustedDepth > maxCeiling) {
-        maxCeiling = gfAdjustedDepth;
+      if (depth > maxCeiling) {
+        maxCeiling = depth;
       }
     }
 
-    // Round up to nearest meter, minimum 0
-    return Math.max(0, Math.ceil(maxCeiling));
+    return maxCeiling;
+  }
+
+  /**
+   * Calculate first stop depth: GF Low ceiling rounded up to the 3m stop grid
+   */
+  function calculateFirstStopDepth(tissueList: TissueCompartment[]): number {
+    const gfLowCeiling = calculateFixedGFCeiling(tissueList, gradientFactorLow.value);
+    return Math.ceil(gfLowCeiling / 3) * 3;
+  }
+
+  /**
+   * Check whether every tissue tolerates the given depth
+   */
+  function canTolerateDepth(
+    tissueList: TissueCompartment[],
+    depth: number,
+    firstStopDepth: number
+  ): boolean {
+    return tissueList.every((tissue) => tissue.pN2 <= getGFMValue(tissue, depth, firstStopDepth));
+  }
+
+  /**
+   * Calculate ceiling depth (minimum safe depth)
+   *
+   * Uses the same GF interpolation as the deco stops, so the ceiling is 0
+   * exactly when the surface is reachable at GF High (i.e. NDL not exceeded).
+   */
+  function calculateCeiling(): number {
+    const firstStopDepth = calculateFirstStopDepth(tissues.value);
+
+    // Shallowest whole meter tolerated by all tissues; the first stop always is
+    for (let depth = 0; depth < firstStopDepth; depth++) {
+      if (canTolerateDepth(tissues.value, depth, firstStopDepth)) {
+        return depth;
+      }
+    }
+
+    return Math.max(0, firstStopDepth);
   }
 
   /**
@@ -167,8 +205,8 @@ export function useDecompression(gfLow = 0.3, gfHigh = 0.85) {
       return stops;
     }
 
-    // Calculate stops at 3m intervals from ceiling to surface
-    const firstStopDepth = Math.ceil(ceiling / 3) * 3;
+    // Calculate stops at 3m intervals from first stop (GF Low anchor) to surface
+    const firstStopDepth = calculateFirstStopDepth(tissues.value);
 
     // Clone tissues for simulation
     const simTissues = tissues.value.map((t) => ({ ...t }));
@@ -180,18 +218,7 @@ export function useDecompression(gfLow = 0.3, gfHigh = 0.85) {
       // Calculate time needed at this stop
       while (true) {
         // Check if we can ascend to next stop (or surface)
-        const nextStopDepth = stopDepth - 3;
-        let canAscend = true;
-
-        for (const tissue of simTissues) {
-          const gfMValue = getGFMValue(tissue, nextStopDepth, firstStopDepth);
-          if (tissue.pN2 > gfMValue) {
-            canAscend = false;
-            break;
-          }
-        }
-
-        if (canAscend) {
+        if (canTolerateDepth(simTissues, stopDepth - 3, firstStopDepth)) {
           break;
         }
 
