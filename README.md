@@ -12,7 +12,7 @@ SimDive permet aux moniteurs de plongée de simuler des plongées virtuelles ave
 
 ### 🤔 Pourquoi ne pas utiliser e-Plouf ?
 
-[e-Plouf](https://e-plouf.com/) nécesite une licence Excel pour pouvoir débloquer toutes les fonctionnalités, et repose sur des macros nécessitant d'abaisser la sécurité de son ordinateur durant l'utilisation. Si, comme moi, vous ne pouvez pas vous permettre ces pré-requis, alors SimDive est fait pour vous 🤗.
+[e-Plouf](https://e-plouf.com/) nécessite une licence Excel pour pouvoir débloquer toutes les fonctionnalités, et repose sur des macros nécessitant d'abaisser la sécurité de son ordinateur durant l'utilisation. Si, comme moi, vous ne pouvez pas vous permettre ces pré-requis, alors SimDive est fait pour vous 🤗.
 
 ## ✨ Fonctionnalités
 
@@ -43,6 +43,8 @@ just run
 ### Sans Docker
 
 ```bash
+cd web
+
 # Installer les dépendances
 npm install
 
@@ -55,7 +57,7 @@ npm run build
 
 ## 📁 Configuration des profils de plongée
 
-Les profils de plongée sont définis dans `public/data/dive-profiles.json`. Les enseignants peuvent modifier ce fichier pour créer leurs propres scénarios pédagogiques.
+Les profils de plongée sont définis dans `web/public/data/dive-profiles.json`. Les enseignants peuvent modifier ce fichier pour créer leurs propres scénarios pédagogiques.
 
 ### Structure d'un profil
 
@@ -105,9 +107,10 @@ Les profils de plongée sont définis dans `public/data/dive-profiles.json`. Les
 ## 🏗️ Architecture
 
 ```
-src/
+web/src/
 ├── components/
 │   ├── DiveComputerDisplay.vue  # Affichage principal
+│   ├── DiveProfileChart.vue     # Graphique du profil
 │   ├── PlaybackControls.vue     # Contrôles lecture
 │   ├── ProfileSelector.vue      # Sélection profil
 │   ├── TissueSaturationGraph.vue # Graphique tissus
@@ -129,10 +132,14 @@ src/
 
 Elle ne doit en aucun cas être utilisée pour planifier des plongées réelles. Les calculs de décompression sont simplifiés à des fins pédagogiques.
 
+## 🤝 Contribuer
+
+Les contributions sont les bienvenues ! Consultez le [guide de contribution](CONTRIBUTING.md) et le [code de conduite](CODE_OF_CONDUCT.md). Pour signaler une faille de sécurité, voir la [politique de sécurité](SECURITY.md).
+
 ## 📝 Licence
 
-MIT (Projet open source à but éducatif).
+[MIT](LICENSE) (Projet open source à but éducatif).
 
 ## 🙏 Crédits
 
-Librement iInspiré par [e-Plouf](https://e-plouf.com/), application créée par le Club Olympique de Sèvres section Plongée.
+Librement inspiré par [e-Plouf](https://e-plouf.com/), application créée par le Club Olympique de Sèvres section Plongée.
