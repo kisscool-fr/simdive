@@ -65,3 +65,30 @@ check: run lint (format "check")
 
 [doc("Run full validation: lint, format check, and tests")]
 ci: run lint (format "check") test
+
+[unix]
+[doc("Create and publish a new release: `just release patch` (patch/minor/major)")]
+release bump="patch": run
+    #!/usr/bin/env sh
+    set -e
+    {{DOCKER_EXEC}} {{APP_NAME}} npm version {{bump}} --no-git-tag-version
+    VERSION=$(awk -F'"' '/"version"/{print $4; exit}' web/package.json)
+    git add web/package.json
+    git commit -m "chore: release v${VERSION}"
+    git tag "v${VERSION}"
+    git push && git push --tags
+    gh release create "v${VERSION}" --generate-notes --title "v${VERSION}"
+
+[windows]
+[doc("Create and publish a new release: `just release patch` (patch/minor/major)")]
+release bump="patch": run
+    #!powershell
+    $ErrorActionPreference = 'Stop'
+    {{DOCKER_EXEC}} {{APP_NAME}} npm version {{bump}} --no-git-tag-version
+    $VERSION = (Get-Content web/package.json | ConvertFrom-Json).version
+    git add web/package.json
+    git commit -m "chore: release v$VERSION"
+    git tag "v$VERSION"
+    git push
+    git push --tags
+    gh release create "v$VERSION" --generate-notes --title "v$VERSION"

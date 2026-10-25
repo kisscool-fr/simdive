@@ -6,11 +6,15 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'production'
+        default: 'preview'
         type: choice
         options:
-          - production
           - preview
+          - production
+      ref:
+        description: 'Tag or branch to deploy (e.g. v1.2.0)'
+        required: true
+        default: 'main'
 
 permissions:
   contents: read
