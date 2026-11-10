@@ -82,6 +82,8 @@ function handleSpeedChange(speed: PlaybackSpeed) {
 
 // Computed for disabled state
 const controlsDisabled = computed(() => !selectedProfile.value);
+
+const appVersion = __APP_VERSION__;
 </script>
 
 <template>
@@ -164,6 +166,7 @@ const controlsDisabled = computed(() => !selectedProfile.value);
           <a href="https://e-plouf.com/" target="_blank" rel="noopener">e-Plouf</a></small
         >
       </p>
+      <p class="app-version">v{{ appVersion }}</p>
       <p class="disclaimer">
         ⚠️ Cette application est uniquement destinée à l'enseignement. Ne jamais utiliser pour
         planifier des plongées réelles.
@@ -321,6 +324,14 @@ body {
 
 .app-footer a:hover {
   text-decoration: underline;
+}
+
+.app-version {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.2);
+  font-family: var(--dc-font-mono);
+  letter-spacing: 0.5px;
 }
 
 .disclaimer {
