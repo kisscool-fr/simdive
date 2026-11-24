@@ -31,6 +31,12 @@ stop:
 restart:
     {{DOCKER_COMPOSE}} restart {{APP_NAME}}
 
+[doc("Clean reinstall of dependencies (npm ci) and restart")]
+reinstall:
+    {{DOCKER_COMPOSE}} down {{APP_NAME}}
+    {{DOCKER_COMPOSE}} run --rm {{APP_NAME}} npm ci
+    {{DOCKER_COMPOSE}} up -d {{APP_NAME}}
+
 [doc("Show container logs")]
 logs:
     {{DOCKER_COMPOSE}} logs -f {{APP_NAME}}
