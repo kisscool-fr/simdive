@@ -49,4 +49,5 @@ If errors occur, use `just lint fix` or `just format` to auto-fix.
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`...), with an optional scope, e.g. `fix(decompression): ...`, `chore(deps): ...`.
 - Work on a branch and open a pull request against `main`; do not commit directly to `main`.
-- CI (`.github/workflows/ci.yml`) runs lint, format check, tests and a Gitleaks secret scan on every PR. Deployment to Cloudflare Pages (`deploy.yml`) is manual only.
+- CI (`.github/workflows/ci.yml`) runs lint, format check, tests and a Gitleaks secret scan on every PR. Deployment to Cloudflare Pages (`deploy.yml`) is manual only: the tag or branch to deploy is the one the workflow is dispatched on ("Use workflow from"). Do not add a `ref` input checked out by the job, as it enables cache poisoning (CodeQL `actions/cache-poisoning`).
+- Releases are automated by release-please (`.github/workflows/release.yml`, `release-please-config.json`, `.release-please-manifest.json`): it derives the next version from commit types and opens a release PR; merging it tags `vX.Y.Z` and publishes the GitHub release. Never bump `web/package.json` version or edit `web/CHANGELOG.md` by hand.

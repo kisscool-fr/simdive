@@ -105,6 +105,18 @@ fix(decompression): corriger le calcul du NDL en remontée
 docs: compléter le guide de contribution
 ```
 
+Le type de commit détermine aussi la prochaine version (voir [Publication d'une version](#publication-dune-version)) : `fix` incrémente le correctif (`1.0.0` → `1.0.1`), `feat` la version mineure (`1.0.0` → `1.1.0`) et un `!` après le type (ou un pied de page `BREAKING CHANGE:`) la version majeure (`1.0.0` → `2.0.0`).
+
+### Publication d'une version
+
+Les versions sont gérées automatiquement par [release-please](https://github.com/googleapis/release-please) :
+
+1. À chaque fusion dans `main`, release-please ouvre (ou met à jour) une Pull Request de release qui incrémente la version dans `web/package.json` et complète `web/CHANGELOG.md` à partir des messages de commit.
+2. Fusionner cette Pull Request crée le tag `vX.Y.Z` et la release GitHub correspondante.
+3. Le déploiement reste manuel : lancez le workflow **Deployment** en sélectionnant le tag à déployer (par exemple `v1.2.0`) dans la liste **« Use workflow from »**.
+
+Ne modifiez pas la version à la main : la version affichée dans l'interface est lue depuis `web/package.json` au moment du build.
+
 ### Bonnes pratiques
 
 - Gardez les Pull Requests ciblées : une PR = un sujet.
