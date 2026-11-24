@@ -1,16 +1,20 @@
 name: Deployment
 
+# Pick the tag (e.g. v1.2.0) or branch to deploy with "Use workflow from" when
+# running the workflow. Do not add a ref input to check out another ref: the job
+# would then run that code with the cache scope of the dispatching branch
+# (usually main), allowing cache poisoning.
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'production'
+        default: 'preview'
         type: choice
         options:
-          - production
           - preview
+          - production
 
 permissions:
   contents: read
@@ -30,16 +34,10 @@ jobs:
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: '.nvmrc'
+          package-manager-cache: false
 
-      - name: Cache node_modules
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        id: cache
-        with:
-          path: web/node_modules
-          key: node-modules-${{ hashFiles('web/package-lock.json') }}
-
+      # Deployments are rare: always install dependencies from a clean state.
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         working-directory: web
         run: npm ci
 
