@@ -1,7 +1,7 @@
 {
   "name": "simdive",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simulateur d'ordinateur de plongée pédagogique pour l'enseignement de la décompression",
   "type": "module",
   "scripts": {
