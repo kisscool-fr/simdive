@@ -115,48 +115,6 @@
   letter-spacing: 2px;
 }
 
-/* Main Display Grid */
-.display-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.display-cell {
-  background: var(--dc-bg-panel);
-  border-radius: var(--dc-border-radius);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100px;
-}
-
-.display-cell.primary {
-  grid-column: span 2;
-  background: linear-gradient(135deg, var(--dc-bg-lcd) 0%, #0d2a47 100%);
-  border: 2px solid var(--dc-accent-cyan);
-  box-shadow: var(--dc-glow);
-}
-
-.display-cell.depth {
-  border-left: 4px solid var(--dc-accent-cyan);
-}
-
-.display-cell.time {
-  border-left: 4px solid var(--dc-lcd-info);
-}
-
-.display-cell.ndl {
-  border-left: 4px solid var(--dc-lcd-text);
-}
-
-.display-cell.air {
-  border-left: 4px solid var(--dc-gauge-full);
-}
-
 /* Progress Bars */
 .progress-bar {
   width: 100%;
@@ -612,14 +570,6 @@
   .dive-computer {
     padding: 16px;
     border-radius: var(--dc-border-radius);
-  }
-
-  .display-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .display-cell.primary {
-    grid-column: span 1;
   }
 
   .lcd-value {

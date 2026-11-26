@@ -2,11 +2,14 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import type { DiveProfile, DisplayMode, PlaybackSpeed } from './types/dive';
 import { useDiveEngine } from './composables/useDiveEngine';
+import { useComputerModels, DEFAULT_COMPUTER_MODEL } from './composables/useComputerModels';
 
 import DiveComputerDisplay from './components/DiveComputerDisplay.vue';
 import DiveProfileChart from './components/DiveProfileChart.vue';
 import PlaybackControls from './components/PlaybackControls.vue';
 import ProfileSelector from './components/ProfileSelector.vue';
+import ComputerModelSelector from './components/ComputerModelSelector.vue';
+import ExpertPanel from './components/ExpertPanel.vue';
 import TissueSaturationGraph from './components/TissueSaturationGraph.vue';
 import ModeToggle from './components/ModeToggle.vue';
 
@@ -33,6 +36,7 @@ function handleKeydown(event: KeyboardEvent) {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown);
+  computerModels.load();
 });
 
 onUnmounted(() => {
@@ -44,6 +48,15 @@ const displayMode = ref<DisplayMode>('essential');
 
 // Selected profile
 const selectedProfile = ref<DiveProfile | null>(null);
+
+// Dive computer models
+const computerModels = useComputerModels();
+const selectedModelId = ref(DEFAULT_COMPUTER_MODEL.id);
+const selectedModel = computed(
+  () =>
+    computerModels.models.value.find((m) => m.id === selectedModelId.value) ??
+    DEFAULT_COMPUTER_MODEL
+);
 
 // Handle profile load
 function handleProfileLoad(profile: DiveProfile) {
@@ -110,6 +123,14 @@ const appVersion = __APP_VERSION__;
             :current-time="engine.playback.value.currentTime"
           />
 
+          <!-- Computer Model Selector -->
+          <ComputerModelSelector
+            v-model="selectedModelId"
+            :models="computerModels.models.value"
+            :errors="computerModels.errors.value"
+            :loading="computerModels.loading.value"
+          />
+
           <!-- Display Mode Toggle -->
           <div class="mode-section">
             <label class="section-label">Mode d'affichage</label>
@@ -123,6 +144,7 @@ const appVersion = __APP_VERSION__;
               <li>Sélectionnez un profil de plongée</li>
               <li>Appuyez sur ▶️ ou <kbd>Espace</kbd> pour lancer la simulation</li>
               <li>Utilisez les contrôles pour naviguer dans la plongée</li>
+              <li>Changez de modèle d'ordinateur et faites défiler ses écrans avec ▸</li>
               <li>Basculez entre les modes Essentiel et Expert</li>
             </ol>
           </div>
@@ -130,7 +152,7 @@ const appVersion = __APP_VERSION__;
 
         <!-- Main Panel: Dive Computer -->
         <div class="main-panel">
-          <DiveComputerDisplay :dive-state="engine.diveState.value" :display-mode="displayMode">
+          <DiveComputerDisplay :dive-state="engine.diveState.value" :model="selectedModel">
             <template #mode-toggle>
               <ModeToggle v-model="displayMode" />
             </template>
@@ -146,6 +168,12 @@ const appVersion = __APP_VERSION__;
             @step-backward="handleStepBackward"
             @seek="handleSeek"
             @speed-change="handleSpeedChange"
+          />
+
+          <!-- Engine data (Expert Mode) -->
+          <ExpertPanel
+            v-if="displayMode === 'expert' && engine.diveState.value"
+            :dive-state="engine.diveState.value"
           />
 
           <!-- Tissue Saturation Graph (Expert Mode) -->
