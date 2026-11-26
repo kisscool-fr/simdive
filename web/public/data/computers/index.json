@@ -1,0 +1,6 @@
+{
+  "models": [
+    { "id": "wide-wrist", "file": "wide-wrist.json" },
+    { "id": "round-watch", "file": "round-watch.json" }
+  ]
+}

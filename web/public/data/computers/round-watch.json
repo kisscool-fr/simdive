@@ -1,0 +1,59 @@
+{
+  "id": "round-watch",
+  "name": "Montre ronde couleur",
+  "description": "Ordinateur montre à écran couleur rond, avec intégration d'air sans fil. Le bouton fait défiler les écrans.",
+  "formFactor": {
+    "shape": "round",
+    "display": "color",
+    "cellStyle": "flat"
+  },
+  "screens": [
+    {
+      "id": "main",
+      "name": "Principal",
+      "areas": ["time ndl", "depth depth", "air autonomy", "stop stop", "warnings warnings"],
+      "widgets": [
+        { "area": "time", "type": "time", "size": "sm" },
+        { "area": "ndl", "type": "ndl", "size": "md" },
+        { "area": "depth", "type": "depth", "size": "xl" },
+        { "area": "air", "type": "air", "size": "sm" },
+        { "area": "autonomy", "type": "autonomy", "size": "sm" },
+        { "area": "stop", "type": "safetyStop" },
+        { "area": "warnings", "type": "warnings" }
+      ]
+    },
+    {
+      "id": "ascent",
+      "name": "Remontée",
+      "areas": ["ascent tts", "deco deco"],
+      "widgets": [
+        { "area": "ascent", "type": "ascentRate", "size": "md" },
+        { "area": "tts", "type": "tts", "size": "md" },
+        { "area": "deco", "type": "decoStops" }
+      ]
+    },
+    {
+      "id": "dive",
+      "name": "Plongée",
+      "areas": ["max sac", "ceiling ceiling"],
+      "widgets": [
+        { "area": "max", "type": "maxDepth", "size": "md" },
+        { "area": "sac", "type": "sac", "size": "md" },
+        { "area": "ceiling", "type": "ceiling", "size": "md" }
+      ]
+    }
+  ],
+  "theme": {
+    "bgPrimary": "#060708",
+    "bgSecondary": "#33373c",
+    "bgLcd": "#000000",
+    "bgPanel": "#111316",
+    "lcdText": "#ffffff",
+    "lcdTextDim": "#9aa4ad",
+    "lcdWarning": "#ffb300",
+    "lcdCritical": "#ff3b30",
+    "lcdInfo": "#4fc3f7",
+    "accentCyan": "#4fc3f7",
+    "accentBlue": "#1e88e5"
+  }
+}

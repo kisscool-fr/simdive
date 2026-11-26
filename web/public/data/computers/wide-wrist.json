@@ -1,0 +1,49 @@
+{
+  "id": "wide-wrist",
+  "name": "Poignet écran large",
+  "description": "Ordinateur poignet d'entrée de gamme à grand écran LCD segmenté. Sans intégration d'air : la pression du bloc se lit sur le manomètre.",
+  "formFactor": {
+    "shape": "rect",
+    "aspectRatio": "4 / 3",
+    "display": "segment-lcd",
+    "cellStyle": "flat"
+  },
+  "screens": [
+    {
+      "id": "main",
+      "name": "Principal",
+      "columns": "3fr 2fr",
+      "areas": ["depth ndl", "depth time", "stop stop", "deco deco", "warnings warnings"],
+      "widgets": [
+        { "area": "depth", "type": "depth", "size": "xl" },
+        { "area": "ndl", "type": "ndl", "size": "lg" },
+        { "area": "time", "type": "time", "size": "md" },
+        { "area": "stop", "type": "safetyStop" },
+        { "area": "deco", "type": "decoStops" },
+        { "area": "warnings", "type": "warnings" }
+      ]
+    },
+    {
+      "id": "info",
+      "name": "Informations",
+      "areas": ["max ascent", "tts ascent"],
+      "widgets": [
+        { "area": "max", "type": "maxDepth", "size": "lg" },
+        { "area": "tts", "type": "tts", "size": "lg" },
+        { "area": "ascent", "type": "ascentRate", "size": "lg" }
+      ]
+    }
+  ],
+  "theme": {
+    "bgPrimary": "#15181b",
+    "bgSecondary": "#2b3035",
+    "bgLcd": "#b8c2a4",
+    "lcdText": "#1c2119",
+    "lcdTextDim": "#4b5444",
+    "lcdWarning": "#1c2119",
+    "lcdCritical": "#7a0c16",
+    "lcdInfo": "#1c2119",
+    "accentCyan": "#9aa58a",
+    "accentBlue": "#3a4148"
+  }
+}
